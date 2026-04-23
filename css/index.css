@@ -361,8 +361,10 @@ textarea.contact-input { min-height: 120px; resize: vertical; }
 .contact-social-side > p { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; max-width: 280px; }
 .ig-icon {
   font-size: 4.5rem; transition: transform var(--transition);
+  display: inline-block;
   background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; color: transparent;
 }
 .ig-icon:hover { transform: scale(1.12); }
 .ig-handle { font-weight: 600; color: var(--primary); font-size: 0.95rem; }
