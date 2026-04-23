@@ -87,6 +87,18 @@
         .progress-bar-container { width: 100%; height: 4px; background: #2d313a; border-radius: 2px; overflow: hidden; margin-bottom: 1rem; display: none; }
         .progress-bar-container.active { display: block; }
         .progress-bar { height: 100%; background: var(--primary); width: 0%; transition: 0.3s; }
+        
+        /* EDIT MODAL */
+        .edit-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 10000; display: none; align-items: center; justify-content: center; }
+        .edit-modal-overlay.active { display: flex; }
+        .edit-modal { background: #1a1d24; border: 1px solid #2d313a; padding: 1.5rem; border-radius: 8px; width: 90%; max-width: 400px; max-height: 90vh; overflow-y: auto; }
+        .edit-modal h3 { margin-top: 0; margin-bottom: 1rem; font-size: 1.1rem; border-bottom: 1px solid #2d313a; padding-bottom: 0.5rem; }
+        .edit-modal .actions { display: flex; gap: 0.5rem; margin-top: 1rem; }
+        .edit-modal .actions button { flex: 1; padding: 0.6rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem; border: none; font-weight: 600; transition: 0.2s; }
+        .btn-cancel { background: #333; color: #fff; }
+        .btn-cancel:hover { background: #444; }
+        .btn-save { background: var(--primary); color: #fff; }
+        .btn-save:hover { background: var(--primary-dark); }
     </style>
 </head>
 <body>
@@ -122,6 +134,19 @@
         <!-- PREVIEW -->
         <div class="cms-preview">
             <iframe src="index.html" id="preview-frame"></iframe>
+        </div>
+    </div>
+
+    <!-- ========== EDIT MODAL ========== -->
+    <div class="edit-modal-overlay" id="edit-modal-overlay">
+        <div class="edit-modal">
+            <h3>Modifica Elemento</h3>
+            <div id="edit-form-content"></div>
+            <div class="progress-bar-container" id="edit-progress-container"><div class="progress-bar"></div></div>
+            <div class="actions">
+                <button class="btn-cancel" onclick="document.getElementById('edit-modal-overlay').classList.remove('active')">Annulla</button>
+                <button class="btn-save" id="btn-save-edit" onclick="saveEditModal()">Salva</button>
+            </div>
         </div>
     </div>
 
@@ -400,6 +425,7 @@ function renderSidebar() {
                     <div class="list-item-title">${b.name}</div>
                 </div>
                 <div class="list-item-actions">
+                    <button class="btn-icon" onclick="openEditModal('brands','${b.id}')"><i class="bi bi-pencil"></i></button>
                     <button class="btn-icon" onclick="moveItem('brands','${b.id}',-1)" ${i===0?'disabled':''}><i class="bi bi-arrow-up"></i></button>
                     <button class="btn-icon" onclick="moveItem('brands','${b.id}',1)" ${i===brandsArr.length-1?'disabled':''}><i class="bi bi-arrow-down"></i></button>
                     <button class="btn-icon danger" onclick="removeItem('brands','${b.id}')"><i class="bi bi-trash"></i></button>
@@ -431,6 +457,7 @@ function renderSidebar() {
                     <div class="list-item-sub">${p.description}</div>
                 </div>
                 <div class="list-item-actions">
+                    <button class="btn-icon" onclick="openEditModal('portfolio','${p.id}')"><i class="bi bi-pencil"></i></button>
                     <button class="btn-icon" onclick="moveItem('portfolio','${p.id}',-1)" ${i===0?'disabled':''}><i class="bi bi-arrow-up"></i></button>
                     <button class="btn-icon" onclick="moveItem('portfolio','${p.id}',1)" ${i===pfArr.length-1?'disabled':''}><i class="bi bi-arrow-down"></i></button>
                     <button class="btn-icon danger" onclick="removeItem('portfolio','${p.id}')"><i class="bi bi-trash"></i></button>
@@ -461,6 +488,7 @@ function renderSidebar() {
                     <div class="list-item-sub">${t.text}</div>
                 </div>
                 <div class="list-item-actions">
+                    <button class="btn-icon" onclick="openEditModal('testimonials','${t.id}')"><i class="bi bi-pencil"></i></button>
                     <button class="btn-icon" onclick="moveItem('testimonials','${t.id}',-1)" ${i===0?'disabled':''}><i class="bi bi-arrow-up"></i></button>
                     <button class="btn-icon" onclick="moveItem('testimonials','${t.id}',1)" ${i===tsArr.length-1?'disabled':''}><i class="bi bi-arrow-down"></i></button>
                     <button class="btn-icon danger" onclick="removeItem('testimonials','${t.id}')"><i class="bi bi-trash"></i></button>
@@ -556,6 +584,72 @@ window.addTestimonial = async function(btn) {
         triggerPreviewUpdate();
         renderSidebar();
     } catch(e) { alert(e.message); btn.disabled = false; btn.textContent = 'Riprova'; }
+}
+
+// ============ EDIT ITEM FUNCTIONS ============
+let editingCollection = '';
+let editingId = '';
+
+window.openEditModal = function(collection, id) {
+    editingCollection = collection;
+    editingId = id;
+    const item = siteData[collection].items.find(x => x.id === id);
+    if (!item) return;
+    
+    let html = '';
+    if (collection === 'brands') {
+        html += `<input type="text" id="edit-br-name" class="form-input" value="${item.name.replace(/"/g, '&quot;')}" placeholder="Nome Brand" style="margin-bottom:0.5rem;" />`;
+        html += `<input type="text" id="edit-br-link" class="form-input" value="${(item.link || '').replace(/"/g, '&quot;')}" placeholder="Link (opzionale)" style="margin-bottom:0.5rem;" />`;
+        html += `<label class="file-upload"><input type="file" id="edit-br-file" accept="image/*" onchange="this.parentElement.querySelector('span').textContent=this.files[0].name" /> <span>Cambia Logo (Lascia vuoto per mantenere)</span></label>`;
+    } else if (collection === 'portfolio') {
+        html += `<input type="text" id="edit-pf-title" class="form-input" value="${item.title.replace(/"/g, '&quot;')}" placeholder="Titolo" style="margin-bottom:0.5rem;" />`;
+        html += `<input type="text" id="edit-pf-desc" class="form-input" value="${(item.description || '').replace(/"/g, '&quot;')}" placeholder="Descrizione" style="margin-bottom:0.5rem;" />`;
+        html += `<label class="file-upload"><input type="file" id="edit-pf-file" accept="image/*" onchange="this.parentElement.querySelector('span').textContent=this.files[0].name" /> <span>Cambia Immagine (Lascia vuoto per mantenere)</span></label>`;
+    } else if (collection === 'testimonials') {
+        html += `<input type="text" id="edit-ts-name" class="form-input" value="${item.name.replace(/"/g, '&quot;')}" placeholder="Nome" style="margin-bottom:0.5rem;" />`;
+        html += `<input type="text" id="edit-ts-role" class="form-input" value="${(item.role || '').replace(/"/g, '&quot;')}" placeholder="Ruolo/Azienda" style="margin-bottom:0.5rem;" />`;
+        html += `<textarea id="edit-ts-text" class="form-textarea" placeholder="Testo recensione..." style="margin-bottom:0.5rem;">${item.text}</textarea>`;
+        html += `<label class="file-upload"><input type="file" id="edit-ts-file" accept="image/*" onchange="this.parentElement.querySelector('span').textContent=this.files[0].name" /> <span>Cambia Foto (Lascia vuoto per mantenere)</span></label>`;
+    }
+    
+    document.getElementById('edit-form-content').innerHTML = html;
+    document.getElementById('edit-modal-overlay').classList.add('active');
+}
+
+window.saveEditModal = async function() {
+    const item = siteData[editingCollection].items.find(x => x.id === editingId);
+    if (!item) return;
+    
+    const btn = document.getElementById('btn-save-edit');
+    btn.disabled = true; btn.textContent = 'Salvataggio...';
+    
+    try {
+        if (editingCollection === 'brands') {
+            item.name = document.getElementById('edit-br-name').value;
+            item.link = document.getElementById('edit-br-link').value;
+            const file = document.getElementById('edit-br-file').files[0];
+            if (file) item.logo = await uploadFileToGitHub(file, 'brands', document.getElementById('edit-progress-container').querySelector('.progress-bar'));
+        } else if (editingCollection === 'portfolio') {
+            item.title = document.getElementById('edit-pf-title').value;
+            item.description = document.getElementById('edit-pf-desc').value;
+            const file = document.getElementById('edit-pf-file').files[0];
+            if (file) item.image = await uploadFileToGitHub(file, 'portfolio', document.getElementById('edit-progress-container').querySelector('.progress-bar'));
+        } else if (editingCollection === 'testimonials') {
+            item.name = document.getElementById('edit-ts-name').value;
+            item.role = document.getElementById('edit-ts-role').value;
+            item.text = document.getElementById('edit-ts-text').value;
+            const file = document.getElementById('edit-ts-file').files[0];
+            if (file) item.photo = await uploadFileToGitHub(file, 'testimonials', document.getElementById('edit-progress-container').querySelector('.progress-bar'));
+        }
+        
+        triggerPreviewUpdate();
+        renderSidebar();
+        document.getElementById('edit-modal-overlay').classList.remove('active');
+    } catch(e) {
+        alert(e.message);
+    }
+    
+    btn.disabled = false; btn.textContent = 'Salva';
 }
 
 </script>

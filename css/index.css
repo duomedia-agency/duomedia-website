@@ -207,10 +207,10 @@ body.light-theme .site-header.header-scrolled { background: rgba(245,245,247,0.8
 /* ============ BRAND GRID ============ */
 .brands { padding: 2.5rem 0; overflow: hidden; }
 .brands-title { text-align: center; font-size: 1.1rem; color: var(--text-muted); margin-bottom: 1.5rem; font-weight: 500; }
-.brands-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 3rem; align-items: center; max-width: 900px; margin: 0 auto; }
-.brand-item { height: 35px; opacity: 0.5; transition: opacity var(--transition), transform var(--transition); }
+.brands-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 3.5rem 4rem; align-items: center; max-width: 1000px; margin: 0 auto; }
+.brand-item { display: flex; align-items: center; justify-content: center; width: 140px; height: 60px; opacity: 0.5; transition: opacity var(--transition), transform var(--transition); }
 .brand-item:hover { opacity: 1; transform: scale(1.05); }
-.brand-item img { height: 100%; width: auto; object-fit: contain; }
+.brand-item img { max-width: 100%; max-height: 100%; object-fit: contain; }
 body.light-theme .brand-item img { filter: invert(1) brightness(0.2); }
 body.light-theme .brand-item { opacity: 0.6; }
 
