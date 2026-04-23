@@ -56,18 +56,11 @@
         "order": 0
       },
       {
-        "id": "b2",
-        "name": "Loomae",
-        "logo": "./assets/images/brand-logos/loomae-white.svg",
-        "link": "https://www.loomae.it",
+        "id": "yqhyuxrv7",
+        "name": "Pro Loco Gasperina APS",
+        "link": "",
+        "logo": "./assets/uploads/brands/1776978807226_Logo_color.png",
         "order": 1
-      },
-      {
-        "id": "b3",
-        "name": "Loomae",
-        "logo": "./assets/images/brand-logos/loomae-white.svg",
-        "link": "https://www.loomae.it",
-        "order": 2
       }
     ]
   },
