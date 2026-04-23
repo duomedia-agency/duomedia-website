@@ -53,14 +53,24 @@
         "name": "Loomae",
         "logo": "./assets/images/brand-logos/loomae-white.svg",
         "link": "https://www.loomae.it",
-        "order": 0
+        "order": 0,
+        "caseStudy": {
+          "active": true,
+          "content": "Per Loomae abbiamo sviluppato un'identità visiva completa e gestito il lancio sui canali digitali. Dalla creazione del logo allo sviluppo della strategia editoriale su Instagram e TikTok.",
+          "gallery": ["./assets/images/home/forest.jpg", "./assets/images/home/photography.jpg"]
+        }
       },
       {
         "id": "yqhyuxrv7",
         "name": "Pro Loco Gasperina APS",
         "link": "",
         "logo": "./assets/uploads/brands/1776978807226_Logo_color.png",
-        "order": 1
+        "order": 1,
+        "caseStudy": {
+          "active": true,
+          "content": "Collaborazione per l'organizzazione e la promozione degli eventi culturali locali. Gestione delle locandine, social media e comunicazione integrata per valorizzare il territorio.",
+          "gallery": []
+        }
       }
     ]
   },

@@ -91,7 +91,7 @@
         /* EDIT MODAL */
         .edit-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 10000; display: none; align-items: center; justify-content: center; }
         .edit-modal-overlay.active { display: flex; }
-        .edit-modal { background: #1a1d24; border: 1px solid #2d313a; padding: 1.5rem; border-radius: 8px; width: 90%; max-width: 400px; max-height: 90vh; overflow-y: auto; }
+        .edit-modal { background: #1a1d24; border: 1px solid #2d313a; padding: 1.5rem; border-radius: 8px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
         .edit-modal h3 { margin-top: 0; margin-bottom: 1rem; font-size: 1.1rem; border-bottom: 1px solid #2d313a; padding-bottom: 0.5rem; }
         .edit-modal .actions { display: flex; gap: 0.5rem; margin-top: 1rem; }
         .edit-modal .actions button { flex: 1; padding: 0.6rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem; border: none; font-weight: 600; transition: 0.2s; }
@@ -99,6 +99,12 @@
         .btn-cancel:hover { background: #444; }
         .btn-save { background: var(--primary); color: #fff; }
         .btn-save:hover { background: var(--primary-dark); }
+        
+        /* GALLERY PREVIEW IN MODAL */
+        .gallery-preview { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
+        .gallery-preview-item { position: relative; width: 60px; height: 60px; border-radius: 4px; overflow: hidden; }
+        .gallery-preview-item img { width: 100%; height: 100%; object-fit: cover; }
+        .gallery-preview-item button { position: absolute; top: 0; right: 0; background: rgba(255,0,0,0.8); color: white; border: none; width: 20px; height: 20px; font-size: 0.7rem; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -146,6 +152,19 @@
             <div class="actions">
                 <button class="btn-cancel" onclick="document.getElementById('edit-modal-overlay').classList.remove('active')">Annulla</button>
                 <button class="btn-save" id="btn-save-edit" onclick="saveEditModal()">Salva</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== CASE STUDY MODAL ========== -->
+    <div class="edit-modal-overlay" id="cs-modal-overlay">
+        <div class="edit-modal">
+            <h3>Gestisci Pagina Cliente</h3>
+            <div id="cs-form-content"></div>
+            <div class="progress-bar-container" id="cs-progress-container"><div class="progress-bar"></div></div>
+            <div class="actions">
+                <button class="btn-cancel" onclick="document.getElementById('cs-modal-overlay').classList.remove('active')">Chiudi</button>
+                <button class="btn-save" id="btn-save-cs" onclick="saveCaseStudyModal()">Salva Modifiche</button>
             </div>
         </div>
     </div>
@@ -425,7 +444,8 @@ function renderSidebar() {
                     <div class="list-item-title">${b.name}</div>
                 </div>
                 <div class="list-item-actions">
-                    <button class="btn-icon" onclick="openEditModal('brands','${b.id}')"><i class="bi bi-pencil"></i></button>
+                    <button class="btn-icon" onclick="openCaseStudyModal('brands','${b.id}')" title="Pagina Cliente"><i class="bi bi-file-earmark-richtext"></i></button>
+                    <button class="btn-icon" onclick="openEditModal('brands','${b.id}')" title="Modifica Base"><i class="bi bi-pencil"></i></button>
                     <button class="btn-icon" onclick="moveItem('brands','${b.id}',-1)" ${i===0?'disabled':''}><i class="bi bi-arrow-up"></i></button>
                     <button class="btn-icon" onclick="moveItem('brands','${b.id}',1)" ${i===brandsArr.length-1?'disabled':''}><i class="bi bi-arrow-down"></i></button>
                     <button class="btn-icon danger" onclick="removeItem('brands','${b.id}')"><i class="bi bi-trash"></i></button>
@@ -457,7 +477,8 @@ function renderSidebar() {
                     <div class="list-item-sub">${p.description}</div>
                 </div>
                 <div class="list-item-actions">
-                    <button class="btn-icon" onclick="openEditModal('portfolio','${p.id}')"><i class="bi bi-pencil"></i></button>
+                    <button class="btn-icon" onclick="openCaseStudyModal('portfolio','${p.id}')" title="Pagina Cliente"><i class="bi bi-file-earmark-richtext"></i></button>
+                    <button class="btn-icon" onclick="openEditModal('portfolio','${p.id}')" title="Modifica Base"><i class="bi bi-pencil"></i></button>
                     <button class="btn-icon" onclick="moveItem('portfolio','${p.id}',-1)" ${i===0?'disabled':''}><i class="bi bi-arrow-up"></i></button>
                     <button class="btn-icon" onclick="moveItem('portfolio','${p.id}',1)" ${i===pfArr.length-1?'disabled':''}><i class="bi bi-arrow-down"></i></button>
                     <button class="btn-icon danger" onclick="removeItem('portfolio','${p.id}')"><i class="bi bi-trash"></i></button>
@@ -650,6 +671,83 @@ window.saveEditModal = async function() {
     }
     
     btn.disabled = false; btn.textContent = 'Salva';
+}
+
+// ============ CASE STUDY FUNCTIONS ============
+window.openCaseStudyModal = function(collection, id) {
+    editingCollection = collection;
+    editingId = id;
+    const item = siteData[collection].items.find(x => x.id === id);
+    if (!item) return;
+    
+    const cs = item.caseStudy || { active: false, content: '', gallery: [] };
+    
+    let html = `
+        <label style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1rem; cursor:pointer; color:#fff;">
+            <input type="checkbox" id="cs-active" ${cs.active ? 'checked' : ''} style="transform:scale(1.2);" />
+            Abilita Pagina "Case Study"
+        </label>
+        
+        <label class="form-group">
+            <span style="display:block; font-size:0.8rem; color:#aaa; margin-bottom:0.4rem;">Testo "Il Progetto"</span>
+            <textarea id="cs-content" class="form-textarea" placeholder="Descrivi il lavoro svolto...">${cs.content}</textarea>
+        </label>
+        
+        <label class="form-group" style="margin-top:1rem;">
+            <span style="display:block; font-size:0.8rem; color:#aaa; margin-bottom:0.4rem;">Aggiungi Foto alla Galleria</span>
+            <label class="file-upload" style="margin-bottom:0;"><input type="file" id="cs-new-photo" accept="image/*" onchange="this.parentElement.querySelector('span').textContent=this.files[0].name" /> <span>Carica Immagine</span></label>
+        </label>
+        
+        <div class="gallery-preview" id="cs-gallery-preview">
+            ${cs.gallery.map((url, i) => `
+                <div class="gallery-preview-item">
+                    <img src="${url}" />
+                    <button onclick="removeGalleryImage(${i})"><i class="bi bi-x"></i></button>
+                </div>
+            `).join('')}
+        </div>
+    `;
+    
+    document.getElementById('cs-form-content').innerHTML = html;
+    document.getElementById('cs-modal-overlay').classList.add('active');
+}
+
+window.removeGalleryImage = function(index) {
+    const item = siteData[editingCollection].items.find(x => x.id === editingId);
+    if (item && item.caseStudy && item.caseStudy.gallery) {
+        item.caseStudy.gallery.splice(index, 1);
+        openCaseStudyModal(editingCollection, editingId); // Re-render
+    }
+}
+
+window.saveCaseStudyModal = async function() {
+    const item = siteData[editingCollection].items.find(x => x.id === editingId);
+    if (!item) return;
+    
+    const btn = document.getElementById('btn-save-cs');
+    btn.disabled = true; btn.textContent = 'Salvataggio...';
+    
+    if (!item.caseStudy) item.caseStudy = { active: false, content: '', gallery: [] };
+    
+    try {
+        item.caseStudy.active = document.getElementById('cs-active').checked;
+        item.caseStudy.content = document.getElementById('cs-content').value;
+        
+        const fileInput = document.getElementById('cs-new-photo');
+        if (fileInput.files.length > 0) {
+            const uploadedUrl = await uploadFileToGitHub(fileInput.files[0], 'portfolio', document.getElementById('cs-progress-container').querySelector('.progress-bar'));
+            item.caseStudy.gallery.push(uploadedUrl);
+        }
+        
+        triggerPreviewUpdate();
+        document.getElementById('cs-modal-overlay').classList.remove('active');
+        // Refresh editing modal if we just uploaded to see new photo
+        if (fileInput.files.length > 0) openCaseStudyModal(editingCollection, editingId);
+    } catch (e) {
+        alert(e.message);
+    }
+    
+    btn.disabled = false; btn.textContent = 'Salva Modifiche';
 }
 
 </script>

@@ -120,11 +120,15 @@ function renderSite(data) {
         const grid = document.getElementById('brands-grid');
         if (grid && data.brands.items) {
             const sorted = data.brands.items.sort((a, b) => (a.order ?? 9999) - (b.order ?? 9999));
-            grid.innerHTML = sorted.map(b => `
-                <a href="${b.link || '#'}" class="brand-item" target="_blank" rel="noopener noreferrer">
+            grid.innerHTML = sorted.map(b => {
+                const href = (b.caseStudy && b.caseStudy.active) ? `cliente.html?id=${b.id}` : (b.link || '#');
+                const target = (b.caseStudy && b.caseStudy.active) ? '' : 'target="_blank" rel="noopener noreferrer"';
+                return `
+                <a href="${href}" class="brand-item" ${target}>
                     <img src="${b.logo}" alt="${b.name}" />
                 </a>
-            `).join('');
+                `;
+            }).join('');
         }
     }
 
@@ -135,15 +139,18 @@ function renderSite(data) {
         const grid = document.getElementById('portfolio-grid');
         if (grid && data.portfolio.items) {
             const sorted = data.portfolio.items.sort((a, b) => (a.order ?? 9999) - (b.order ?? 9999));
-            grid.innerHTML = sorted.map(d => `
-                <div class="portfolio-card reveal-up">
+            grid.innerHTML = sorted.map(d => {
+                const href = (d.caseStudy && d.caseStudy.active) ? `cliente.html?id=${d.id}` : '#';
+                return `
+                <div class="portfolio-card reveal-up" onclick="if('${href}' !== '#') window.location.href='${href}'" style="${href !== '#' ? 'cursor:pointer;' : ''}">
                     <img src="${d.image}" alt="${d.title}" />
                     <div class="portfolio-overlay">
                         <h3>${d.title}</h3>
                         <p>${d.description || ''}</p>
                     </div>
                 </div>
-            `).join('');
+                `;
+            }).join('');
         }
     }
 

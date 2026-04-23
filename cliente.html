@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Duo Media — Case Study</title>
+    <meta name="description" content="Scopri il progetto di Duo Media" />
+    <link rel="shortcut icon" href="./assets/logo/Favicon.png" type="image/png" />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/index.css" />
+    <style>
+        .client-hero {
+            padding: 8rem 0 4rem;
+            text-align: center;
+            background: linear-gradient(to bottom, rgba(0, 150, 255, 0.05), transparent);
+            min-height: 40vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .client-logo {
+            max-width: 250px;
+            max-height: 120px;
+            margin-bottom: 2rem;
+            object-fit: contain;
+        }
+        body.light-theme .client-logo.needs-invert {
+            filter: invert(1) brightness(0.2);
+        }
+        .client-content {
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-muted);
+            padding: 2rem 0;
+        }
+        .client-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+        .client-gallery img {
+            width: 100%;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            object-fit: cover;
+            aspect-ratio: 4/3;
+            transition: transform var(--transition);
+        }
+        .client-gallery img:hover {
+            transform: scale(1.02);
+        }
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            transition: opacity 0.3s;
+        }
+        .back-btn:hover {
+            opacity: 0.8;
+        }
+    </style>
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" />
+</head>
+<body>
+    <!-- ========== HEADER ========== -->
+    <header class="site-header" id="site-header">
+        <a href="index.html" class="header-logo" aria-label="Home">
+            <img src="./assets/logo/DUO_Simbolo_Bianco.png" alt="Duo Media logo" class="invert-on-light" />
+        </a>
+
+        <nav class="header-nav" id="desktop-nav">
+            <a href="index.html#hero">Duo Media</a>
+            <a href="index.html#servizi">Servizi</a>
+            <a href="index.html#portfolio">Progetti</a>
+        </nav>
+
+        <div class="header-actions">
+            <a href="index.html#contatti" class="header-cta">Contattaci <i class="bi bi-envelope"></i></a>
+            <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle tema">
+                <i class="bi bi-moon-stars-fill"></i><i class="bi bi-sun-fill"></i>
+            </button>
+            <button class="menu-toggle" id="menu-toggle-btn" aria-label="Menu">
+                <i class="bi bi-list"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-overlay" id="mobile-overlay"></div>
+    <nav class="mobile-menu" id="mobile-menu">
+        <a href="index.html#hero">Duo Media</a>
+        <a href="index.html#servizi">Servizi</a>
+        <a href="index.html#portfolio">Progetti</a>
+        <a href="index.html#contatti">Contattaci</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle tema" style="align-self:flex-start; margin-top:1rem;">
+            <i class="bi bi-moon-stars-fill"></i><i class="bi bi-sun-fill"></i>
+        </button>
+    </nav>
+
+    <!-- ========== CLIENTE CONTENT ========== -->
+    <main>
+        <section class="client-hero">
+            <div class="container">
+                <a href="index.html" class="back-btn"><i class="bi bi-arrow-left"></i> Torna alla Home</a>
+                <img src="" alt="" class="client-logo reveal-up" id="c-logo" style="display:none;" />
+                <h1 class="section-title reveal-up" id="c-title">Caricamento...</h1>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="container">
+                <div class="client-content reveal-up" id="c-content">
+                    <!-- Text injected here -->
+                </div>
+                
+                <div class="client-gallery reveal-up" id="c-gallery">
+                    <!-- Gallery injected here -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <img src="./assets/logo/DUO_Logo_Bianco.png" alt="Duo Media" class="invert-on-light" style="width:160px;" />
+                <p>
+                    <span id="footer-company">Duo Media — di Francesco Martello</span><br />
+                    P.IVA — <span id="footer-piva">IT04003840792</span><br />
+                    <span id="footer-location">Gasperina | CZ</span>
+                </p>
+            </div>
+            <div class="footer-links">
+                <h3>Esplora</h3>
+                <a href="index.html#servizi">I nostri Servizi</a>
+                <a href="index.html#portfolio">Lavori e Portfolio</a>
+                <a href="index.html#contatti">Contattaci</a>
+            </div>
+            <div class="footer-links">
+                <h3>Account</h3>
+                <a href="./admin.html">Area Riservata</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ========== SCRIPTS ========== -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.0/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.0/ScrollTrigger.min.js"></script>
+    <script src="./cliente.js"></script>
+</body>
+</html>
