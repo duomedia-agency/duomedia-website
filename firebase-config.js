@@ -1,16 +1,15 @@
 // ============ FIREBASE CONFIG ============
-// Replace these placeholder values with your actual Firebase project credentials.
-// Get them from: https://console.firebase.google.com → Project Settings → General → Your apps → Web app
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT.appspot.com",
-    messagingSenderId: "000000000000",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyDbCNWdTKrHRT7XGJxOOy20Be9GEVo3v9k",
+    authDomain: "duomedia-website.firebaseapp.com",
+    projectId: "duomedia-website",
+    storageBucket: "duomedia-website.firebasestorage.app",
+    messagingSenderId: "1082009699937",
+    appId: "1:1082009699937:web:5b8bd192390fa1521c8c20",
+    measurementId: "G-JFJEDR2ZMM"
 };
 
-// Initialize Firebase
+// Initialize Firebase (compat SDK — used via CDN scripts in index.html)
 firebase.initializeApp(firebaseConfig);
 
 const auth = firebase.auth();
