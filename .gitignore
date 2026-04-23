@@ -1,0 +1,14 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Dependencies (no longer used)
+node_modules/
+
+# Gemini
+.gemini/

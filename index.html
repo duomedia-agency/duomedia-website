@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Duo Media — Agenzia Creativa</title>
+    <meta name="description" content="Duo Media è un'agenzia creativa specializzata in Social Media Management, Organizzazione Eventi e Graphic Design. Trasformiamo visioni in realtà." />
+    <link rel="shortcut icon" href="./assets/logo/Favicon.png" type="image/png" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Duo Media — Agenzia Creativa" />
+    <meta property="og:description" content="Social Media Management, Organizzazione Eventi e Graphic Design. Un team, mille soluzioni." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.instagram.com/agenzia.duomedia" />
+    <meta property="og:image" content="./assets/logo/DUO_Simbolo_Bianco.png" />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/index.css" />
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css"
+          integrity="sha512-dPXYcDub/aeb08c63jRq/k6GaKccl256JQy/AnOq7CAnEZ9FzSL9wSbcZkMp4R26vBsMLFYH4kQ67/bbV8XaCQ=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <!-- ========== HEADER ========== -->
+    <header class="site-header" id="site-header">
+        <a href="#hero" class="header-logo" aria-label="Home">
+            <img src="./assets/logo/DUO_Simbolo_Bianco.png" alt="Duo Media logo" class="invert-on-light" />
+        </a>
+
+        <nav class="header-nav" id="desktop-nav">
+            <a href="#hero">Duo Media</a>
+            <a href="#servizi">Servizi</a>
+            <a href="#clienti">Clienti</a>
+            <a href="#portfolio">Progetti</a>
+            <a href="#contatti">Contattaci</a>
+        </nav>
+
+        <div class="header-actions">
+            <a href="#contatti" class="header-cta">Contattaci <i class="bi bi-envelope"></i></a>
+            <button class="theme-toggle" onclick="document.body.classList.toggle('light-theme')" aria-label="Toggle tema">
+                <i class="bi bi-moon-stars-fill"></i><i class="bi bi-sun-fill"></i>
+            </button>
+            <button class="menu-toggle" id="menu-toggle-btn" aria-label="Menu">
+                <i class="bi bi-list"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-overlay" id="mobile-overlay"></div>
+    <nav class="mobile-menu" id="mobile-menu">
+        <a href="#hero">Duo Media</a>
+        <a href="#servizi">Servizi</a>
+        <a href="#clienti">Clienti</a>
+        <a href="#portfolio">Progetti</a>
+        <a href="#contatti">Contattaci</a>
+        <button class="theme-toggle" onclick="document.body.classList.toggle('light-theme')" aria-label="Toggle tema" style="align-self:flex-start; margin-top:1rem;">
+            <i class="bi bi-moon-stars-fill"></i><i class="bi bi-sun-fill"></i>
+        </button>
+    </nav>
+
+    <!-- ========== HERO ========== -->
+    <section class="hero" id="hero">
+        <div class="hero-glow"></div>
+
+        <div class="hero-logo-wrapper" id="hero-logo-wrapper">
+            <div class="hero-logo">
+                <img src="./assets/logo/DUO_Simbolo_Bianco.png" alt="Duo Media" class="invert-on-light" />
+            </div>
+        </div>
+
+        <h1 class="hero-title reveal-up">
+            <span class="gradient-text">Raccontiamo la tua storia</span><br />
+            <span class="gradient-text">trasformando visioni in realtà</span>
+        </h1>
+
+        <p class="hero-subtitle reveal-up">
+            Gestiamo i tuoi social, organizziamo eventi e creiamo grafiche…
+            e lo facciamo in due, ma con il doppio dell'energia!
+        </p>
+
+        <div class="hero-buttons reveal-up">
+            <a href="#contatti" class="btn btn-primary">Contattaci</a>
+            <a href="#portfolio" class="btn btn-outline">
+                <i class="bi bi-play-circle-fill"></i>
+                Scopri come lavoriamo
+            </a>
+        </div>
+    </section>
+
+    <!-- ========== BRAND CAROUSEL ========== -->
+    <section class="brands section">
+        <h2 class="brands-title reveal-up">I brand che seguiamo</h2>
+        <div style="overflow:hidden;">
+            <div class="carousel-track" id="brands-track">
+                <a href="https://www.loomae.it" class="carousel-item"><img src="./assets/images/brand-logos/loomae-white.svg" alt="Loomae" /></a>
+                <a href="https://www.loomae.it" class="carousel-item"><img src="./assets/images/brand-logos/loomae-white.svg" alt="Loomae" /></a>
+                <a href="https://www.loomae.it" class="carousel-item"><img src="./assets/images/brand-logos/loomae-white.svg" alt="Loomae" /></a>
+                <!-- Duplicate set for infinite scroll -->
+                <a href="https://www.loomae.it" class="carousel-item"><img src="./assets/images/brand-logos/loomae-white.svg" alt="Loomae" /></a>
+                <a href="https://www.loomae.it" class="carousel-item"><img src="./assets/images/brand-logos/loomae-white.svg" alt="Loomae" /></a>
+                <a href="https://www.loomae.it" class="carousel-item"><img src="./assets/images/brand-logos/loomae-white.svg" alt="Loomae" /></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== SERVIZI ========== -->
+    <section class="section" id="servizi">
+        <div class="container">
+            <h2 class="section-title reveal-up">Cosa offriamo?</h2>
+            <p class="section-subtitle reveal-up">Tre anime, un solo obiettivo: far crescere il tuo brand.</p>
+
+            <div class="services-grid">
+                <div class="service-card reveal-up">
+                    <div class="service-icon-area">
+                        <i class="bi bi-phone-fill"></i>
+                    </div>
+                    <div class="service-content">
+                        <h3>Social Media Management</h3>
+                        <p>Gestione completa dei canali social, creazione contenuti creativi e strategie mirate per far crescere la tua community.</p>
+                    </div>
+                </div>
+
+                <div class="service-card reveal-up">
+                    <div class="service-icon-area">
+                        <i class="bi bi-calendar-event-fill"></i>
+                    </div>
+                    <div class="service-content">
+                        <h3>Organizzazione Eventi</h3>
+                        <p>Progettiamo e realizziamo eventi emozionanti, curando ogni singolo dettaglio per farti ricordare nel tempo.</p>
+                    </div>
+                </div>
+
+                <div class="service-card reveal-up">
+                    <div class="service-icon-area">
+                        <i class="bi bi-bezier2"></i>
+                    </div>
+                    <div class="service-content">
+                        <h3>Graphic Design</h3>
+                        <p>Creazione di grafiche di impatto, loghi e brand identity unici per distinguerti nel mercato moderno.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== PERCHÉ NOI ========== -->
+    <section class="section">
+        <div class="container">
+            <div class="why-us-grid reveal-up">
+                <div class="why-us-image">
+                    <img src="./assets/images/home/dash.png" alt="Il nostro team" />
+                </div>
+                <div class="why-us-text">
+                    <h2>Un unico team,<br />mille soluzioni.</h2>
+
+                    <div class="why-point">
+                        <h4><i class="bi bi-star-fill"></i> Approccio Sartoriale</h4>
+                        <p>Ogni brand ha una storia unica. Noi ascoltiamo la tua e creiamo una strategia di comunicazione tagliata perfettamente su misura.</p>
+                    </div>
+
+                    <div class="why-point">
+                        <h4><i class="bi bi-lightning-fill"></i> Dinamismo e Risultati</h4>
+                        <p>Siamo due professionisti agili e veloci. Niente burocrazia da grande agenzia, solo creatività pura e risultati misurabili.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== TESTIMONIAL ========== -->
+    <section class="section" id="clienti">
+        <div class="container">
+            <h2 class="section-title reveal-up">Dicono di noi</h2>
+            <p class="section-subtitle reveal-up">La soddisfazione dei nostri clienti è il nostro miglior biglietto da visita.</p>
+
+            <div class="testimonials-grid" id="testimonials-grid">
+                <div class="testimonial-card reveal-up">
+                    <p>"Duo Media ha rivoluzionato il nostro modo di comunicare. Creativi, veloci e sempre pronti a trovare la soluzione giusta per noi. Grazie ragazzi!"</p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar"><img src="./assets/images/people/women.jpg" alt="Sara L." /></div>
+                        <div>
+                            <div class="testimonial-name">Sara L.</div>
+                            <div class="testimonial-role">Owner, Ristorante La Baia</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card reveal-up">
+                    <p>"L'organizzazione del nostro evento aziendale è stata impeccabile. Hanno curato ogni minimo dettaglio, superando le nostre aspettative."</p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar"><img src="./assets/images/people/man.jpg" alt="Marco V." /></div>
+                        <div>
+                            <div class="testimonial-name">Marco V.</div>
+                            <div class="testimonial-role">CEO, TechNova</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card reveal-up">
+                    <p>"Affidare a loro la nostra identità visiva è stata la scelta migliore. Sanno esattamente cosa funziona oggi!"</p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar"><img src="./assets/images/people/man2.jpg" alt="Andrea M." /></div>
+                        <div>
+                            <div class="testimonial-name">Andrea M.</div>
+                            <div class="testimonial-role">Founder, SportMix</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== PORTFOLIO ========== -->
+    <section class="section" id="portfolio">
+        <div class="container">
+            <h2 class="section-title reveal-up">I Nostri Progetti ✨</h2>
+            <p class="section-subtitle reveal-up">Ogni progetto è un viaggio creativo. Ecco alcuni dei nostri lavori recenti.</p>
+
+            <div class="portfolio-grid" id="portfolio-grid">
+                <div class="portfolio-card reveal-up">
+                    <img src="./assets/images/home/forest.jpg" alt="Loomae Rebranding" />
+                    <div class="portfolio-overlay">
+                        <h3>Loomae Rebranding</h3>
+                        <p>Creazione nuova brand identity e campagna social di lancio.</p>
+                    </div>
+                </div>
+
+                <div class="portfolio-card reveal-up">
+                    <img src="./assets/images/home/mountain.jpg" alt="TechNova Event" />
+                    <div class="portfolio-overlay">
+                        <h3>TechNova Event</h3>
+                        <p>Organizzazione e gestione evento aziendale annuale per 500+ persone.</p>
+                    </div>
+                </div>
+
+                <div class="portfolio-card reveal-up">
+                    <img src="./assets/images/home/photography.jpg" alt="SportMix Social" />
+                    <div class="portfolio-overlay">
+                        <h3>SportMix Social</h3>
+                        <p>Gestione editoriale Instagram e TikTok con +300% conversioni.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FAQ ========== -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title reveal-up">Domande Frequenti</h2>
+            <p class="section-subtitle reveal-up">Hai dei dubbi? Ecco le risposte alle domande più comuni.</p>
+
+            <div class="faq-list">
+                <div class="faq-item reveal-up">
+                    <button class="faq-question">
+                        <span>Come funziona il vostro processo creativo?</span>
+                        <i class="bi bi-plus"></i>
+                    </button>
+                    <div class="faq-answer">
+                        Partiamo sempre da un briefing approfondito per capire la tua visione. Poi sviluppiamo una proposta creativa, la condividiamo con te per feedback, e infine la realizziamo nei minimi dettagli.
+                    </div>
+                </div>
+
+                <div class="faq-item reveal-up">
+                    <button class="faq-question">
+                        <span>Quanto costa un servizio?</span>
+                        <i class="bi bi-plus"></i>
+                    </button>
+                    <div class="faq-answer">
+                        Ogni progetto è diverso, per questo preferiamo fare un preventivo personalizzato dopo aver capito le tue esigenze. Contattaci per un preventivo gratuito e senza impegno!
+                    </div>
+                </div>
+
+                <div class="faq-item reveal-up">
+                    <button class="faq-question">
+                        <span>In quanto tempo consegnate un progetto?</span>
+                        <i class="bi bi-plus"></i>
+                    </button>
+                    <div class="faq-answer">
+                        Le tempistiche variano in base alla complessità del progetto. Un piano social viene generalmente consegnato in 5-7 giorni lavorativi, mentre un rebranding completo può richiedere 2-4 settimane.
+                    </div>
+                </div>
+
+                <div class="faq-item reveal-up">
+                    <button class="faq-question">
+                        <span>Lavorate anche fuori dalla Calabria?</span>
+                        <i class="bi bi-plus"></i>
+                    </button>
+                    <div class="faq-answer">
+                        Assolutamente sì! Lavoriamo con clienti in tutta Italia. Per social media e graphic design operiamo interamente da remoto, mentre per gli eventi ci spostiamo ovunque sia necessario.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== CONTATTI ========== -->
+    <section class="section" id="contatti">
+        <div class="container">
+            <h2 class="section-title reveal-up">Hai un progetto in mente?</h2>
+            <p class="section-subtitle reveal-up">Parliamone! Compila il form o scrivici direttamente su Instagram.</p>
+
+            <div class="contact-grid reveal-up">
+                <div class="contact-form-side">
+                    <h2>Scrivici</h2>
+                    <p>Compila il form per richiedere informazioni o un preventivo gratuito. Ti risponderemo subito!</p>
+                    <form class="contact-form" action="mailto:info@duomedia.it" method="post" enctype="text/plain">
+                        <input type="text" class="contact-input" placeholder="Il tuo Nome" required />
+                        <input type="email" class="contact-input" placeholder="La tua Email" required />
+                        <textarea class="contact-input" placeholder="Come possiamo aiutarti?" required></textarea>
+                        <button type="submit" class="contact-submit">Invia Messaggio</button>
+                    </form>
+                </div>
+
+                <div class="contact-divider"></div>
+
+                <div class="contact-social-side">
+                    <h2>Seguici sui social</h2>
+                    <p>Guarda il dietro le quinte, i nostri ultimi lavori e scopri spunti utili per il tuo business.</p>
+                    <a href="https://instagram.com/agenzia.duomedia" target="_blank" rel="noopener noreferrer">
+                        <i class="bi bi-instagram ig-icon"></i>
+                    </a>
+                    <a href="https://instagram.com/agenzia.duomedia" target="_blank" rel="noopener noreferrer" class="ig-handle">
+                        @agenzia.duomedia
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <img src="./assets/logo/DUO_Simbolo_Bianco.png" alt="Duo Media" class="invert-on-light" />
+                <p>
+                    Duo Media — di Francesco Martello<br />
+                    P.IVA — IT04003840792<br />
+                    Gasperina | CZ
+                </p>
+            </div>
+
+            <div class="footer-links">
+                <h3>Esplora</h3>
+                <a href="#servizi">I nostri Servizi</a>
+                <a href="#portfolio">Lavori e Portfolio</a>
+                <a href="#clienti">Dicono di Noi</a>
+                <a href="#contatti">Contattaci</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ========== SCRIPTS ========== -->
+    <!-- Firebase SDK (compat) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+
+    <script src="./firebase-config.js"></script>
+
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.0/gsap.min.js"
+            integrity="sha512-B1lby8cGcAUU3GR+Fd809/ZxgHbfwJMp0jLTVfHiArTuUt++VqSlJpaJvhNtRf3NERaxDNmmxkdx2o+aHd4bvw=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.0/ScrollTrigger.min.js"
+            integrity="sha512-AY2+JxnBETJ0wcXnLPCcZJIJx0eimyhz3OJ55k2Jx4RtYC+XdIi2VtJQ+tP3BaTst4otlGG1TtPJ9fKrAUnRdQ=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="./index.js"></script>
+</body>
+</html>

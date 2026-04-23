@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin — Duo Media</title>
+    <link rel="shortcut icon" href="./assets/logo/Favicon.png" type="image/png" />
+    <link rel="stylesheet" href="css/index.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css"
+          integrity="sha512-dPXYcDub/aeb08c63jRq/k6GaKccl256JQy/AnOq7CAnEZ9FzSL9wSbcZkMp4R26vBsMLFYH4kQ67/bbV8XaCQ=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+
+    <!-- ========== LOGIN GATE ========== -->
+    <div class="admin-gate" id="admin-gate">
+        <img src="./assets/logo/DUO_Simbolo_Bianco.png" alt="Duo Media" style="width:80px; margin-bottom:0.5rem;" class="invert-on-light" />
+        <h1>Area Riservata</h1>
+        <p>Accedi con le tue credenziali Firebase.</p>
+        <input type="email" class="admin-pw-input" id="auth-email" placeholder="Email" autocomplete="email" />
+        <input type="password" class="admin-pw-input" id="auth-password" placeholder="Password" autocomplete="current-password" />
+        <button class="admin-pw-btn" id="auth-btn">Accedi</button>
+        <div class="admin-error" id="auth-error"></div>
+    </div>
+
+    <!-- ========== LOGOUT BUTTON ========== -->
+    <button class="admin-logout-btn" id="logout-btn"><i class="bi bi-box-arrow-right"></i> Logout</button>
+
+    <!-- ========== ADMIN DASHBOARD ========== -->
+    <div class="admin-dashboard" id="admin-dashboard">
+        <h1><i class="bi bi-gear-fill" style="color:var(--primary);"></i> Pannello Admin</h1>
+
+        <!-- PORTFOLIO -->
+        <div class="admin-section">
+            <h2><i class="bi bi-images"></i> Portfolio — I Nostri Progetti</h2>
+            <div class="admin-form" id="portfolio-form">
+                <input type="text" placeholder="Titolo progetto" id="pf-title" />
+                <textarea placeholder="Descrizione breve" id="pf-desc"></textarea>
+                <div class="admin-upload-area" id="pf-upload-area">
+                    <i class="bi bi-cloud-arrow-up"></i>
+                    <span class="upload-label">Trascina un'immagine o clicca per caricare</span>
+                    <input type="file" accept="image/*" id="pf-file" />
+                </div>
+                <div class="admin-upload-progress" id="pf-progress"><div class="admin-upload-progress-bar" id="pf-progress-bar"></div></div>
+                <button class="admin-add-btn" id="pf-add"><i class="bi bi-plus-lg"></i> Aggiungi</button>
+            </div>
+            <div class="admin-items" id="pf-list"></div>
+        </div>
+
+        <!-- BRANDS -->
+        <div class="admin-section">
+            <h2><i class="bi bi-building"></i> Brand — Carousel Loghi</h2>
+            <div class="admin-form" id="brands-form">
+                <input type="text" placeholder="Nome brand" id="br-name" />
+                <input type="text" placeholder="Link sito web" id="br-link" />
+                <div class="admin-upload-area" id="br-upload-area">
+                    <i class="bi bi-cloud-arrow-up"></i>
+                    <span class="upload-label">Carica logo (SVG/PNG)</span>
+                    <input type="file" accept="image/*" id="br-file" />
+                </div>
+                <div class="admin-upload-progress" id="br-progress"><div class="admin-upload-progress-bar" id="br-progress-bar"></div></div>
+                <button class="admin-add-btn" id="br-add"><i class="bi bi-plus-lg"></i> Aggiungi</button>
+            </div>
+            <div class="admin-items" id="br-list"></div>
+        </div>
+
+        <!-- TESTIMONIALS -->
+        <div class="admin-section">
+            <h2><i class="bi bi-chat-quote-fill"></i> Recensioni — Dicono di noi</h2>
+            <div class="admin-form" id="testimonials-form">
+                <input type="text" placeholder="Nome" id="ts-name" />
+                <input type="text" placeholder="Ruolo (es. CEO, TechNova)" id="ts-role" />
+                <textarea placeholder="Testo recensione" id="ts-text"></textarea>
+                <div class="admin-upload-area" id="ts-upload-area">
+                    <i class="bi bi-cloud-arrow-up"></i>
+                    <span class="upload-label">Carica foto (opzionale)</span>
+                    <input type="file" accept="image/*" id="ts-file" />
+                </div>
+                <div class="admin-upload-progress" id="ts-progress"><div class="admin-upload-progress-bar" id="ts-progress-bar"></div></div>
+                <button class="admin-add-btn" id="ts-add"><i class="bi bi-plus-lg"></i> Aggiungi</button>
+            </div>
+            <div class="admin-items" id="ts-list"></div>
+        </div>
+
+        <div style="text-align:center; margin-top:2rem; padding-bottom:2rem;">
+            <p style="color:var(--text-muted); font-size:0.85rem;">
+                <i class="bi bi-cloud-check"></i> I dati vengono salvati su Firebase. Le modifiche sono visibili immediatamente su index.html.
+            </p>
+        </div>
+    </div>
+
+    <!-- ========== SCRIPTS ========== -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="./firebase-config.js"></script>
+
+<script>
+// ============ ELEMENTS ============
+const gate = document.getElementById('admin-gate');
+const dashboard = document.getElementById('admin-dashboard');
+const logoutBtn = document.getElementById('logout-btn');
+const authError = document.getElementById('auth-error');
+
+// ============ AUTH ============
+document.getElementById('auth-btn').addEventListener('click', doLogin);
+document.getElementById('auth-password').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+async function doLogin() {
+    const email = document.getElementById('auth-email').value.trim();
+    const pw = document.getElementById('auth-password').value;
+    if (!email || !pw) return;
+
+    try {
+        await auth.signInWithEmailAndPassword(email, pw);
+    } catch (err) {
+        authError.textContent = getAuthErrorMessage(err.code);
+        authError.style.display = 'block';
+        setTimeout(() => { authError.style.display = 'none'; }, 3000);
+    }
+}
+
+function getAuthErrorMessage(code) {
+    const msgs = {
+        'auth/invalid-email': 'Email non valida.',
+        'auth/user-not-found': 'Utente non trovato.',
+        'auth/wrong-password': 'Password errata.',
+        'auth/invalid-credential': 'Credenziali non valide.',
+        'auth/too-many-requests': 'Troppi tentativi. Riprova più tardi.',
+    };
+    return msgs[code] || 'Errore di autenticazione.';
+}
+
+logoutBtn.addEventListener('click', () => auth.signOut());
+
+// Listen for auth state
+auth.onAuthStateChanged(user => {
+    if (user) {
+        gate.style.display = 'none';
+        dashboard.classList.add('visible');
+        logoutBtn.classList.add('visible');
+        loadAll();
+    } else {
+        gate.style.display = '';
+        dashboard.classList.remove('visible');
+        logoutBtn.classList.remove('visible');
+    }
+});
+
+// ============ UPLOAD HELPER ============
+async function uploadFile(file, folder, progressBar) {
+    const fileName = Date.now() + '_' + file.name.replace(/[^a-zA-Z0-9._-]/g, '');
+    const ref = storage.ref(`${folder}/${fileName}`);
+    const task = ref.put(file);
+
+    if (progressBar) {
+        progressBar.parentElement.classList.add('active');
+    }
+
+    return new Promise((resolve, reject) => {
+        task.on('state_changed',
+            snap => {
+                const pct = (snap.bytesTransferred / snap.totalBytes) * 100;
+                if (progressBar) progressBar.style.width = pct + '%';
+            },
+            err => { reject(err); },
+            async () => {
+                const url = await task.snapshot.ref.getDownloadURL();
+                if (progressBar) {
+                    progressBar.style.width = '100%';
+                    setTimeout(() => { progressBar.parentElement.classList.remove('active'); progressBar.style.width = '0%'; }, 600);
+                }
+                resolve(url);
+            }
+        );
+    });
+}
+
+// File preview on upload areas
+document.querySelectorAll('.admin-upload-area input[type="file"]').forEach(input => {
+    input.addEventListener('change', () => {
+        const area = input.closest('.admin-upload-area');
+        const label = area.querySelector('.upload-label');
+        if (input.files.length > 0) {
+            label.textContent = input.files[0].name;
+        }
+    });
+});
+
+// ============ PORTFOLIO ============
+async function renderPfList() {
+    const list = document.getElementById('pf-list');
+    const snap = await db.collection('portfolio').orderBy('createdAt', 'desc').get();
+    if (snap.empty) { list.innerHTML = '<div class="admin-empty">Nessun progetto aggiunto.</div>'; return; }
+    list.innerHTML = '';
+    snap.forEach(doc => {
+        const d = doc.data();
+        list.innerHTML += `
+            <div class="admin-item">
+                <img src="${d.image}" alt="" class="admin-item-img" onerror="this.style.display='none'" />
+                <div class="admin-item-info">
+                    <strong>${d.title}</strong>
+                    <span>${d.description || ''}</span>
+                </div>
+                <button class="admin-remove-btn" onclick="removePf('${doc.id}')"><i class="bi bi-x-lg"></i></button>
+            </div>`;
+    });
+}
+
+document.getElementById('pf-add').addEventListener('click', async () => {
+    const title = document.getElementById('pf-title').value.trim();
+    const desc = document.getElementById('pf-desc').value.trim();
+    const file = document.getElementById('pf-file').files[0];
+    if (!title || !file) { alert('Inserisci titolo e immagine.'); return; }
+
+    const btn = document.getElementById('pf-add');
+    btn.disabled = true; btn.textContent = 'Caricamento...';
+
+    try {
+        const imageUrl = await uploadFile(file, 'portfolio', document.getElementById('pf-progress-bar'));
+        await db.collection('portfolio').add({ title, description: desc, image: imageUrl, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+        document.getElementById('pf-title').value = '';
+        document.getElementById('pf-desc').value = '';
+        document.getElementById('pf-file').value = '';
+        document.querySelector('#pf-upload-area .upload-label').textContent = 'Trascina un\'immagine o clicca per caricare';
+        await renderPfList();
+    } catch (err) { alert('Errore: ' + err.message); }
+    btn.disabled = false; btn.innerHTML = '<i class="bi bi-plus-lg"></i> Aggiungi';
+});
+
+window.removePf = async function(id) {
+    if (!confirm('Rimuovere questo progetto?')) return;
+    await db.collection('portfolio').doc(id).delete();
+    renderPfList();
+};
+
+// ============ BRANDS ============
+async function renderBrList() {
+    const list = document.getElementById('br-list');
+    const snap = await db.collection('brands').orderBy('createdAt', 'desc').get();
+    if (snap.empty) { list.innerHTML = '<div class="admin-empty">Nessun brand aggiunto.</div>'; return; }
+    list.innerHTML = '';
+    snap.forEach(doc => {
+        const d = doc.data();
+        list.innerHTML += `
+            <div class="admin-item">
+                <img src="${d.logo}" alt="" class="admin-item-img" style="background:#222;padding:4px;" onerror="this.style.display='none'" />
+                <div class="admin-item-info">
+                    <strong>${d.name}</strong>
+                    <span>${d.link || 'Nessun link'}</span>
+                </div>
+                <button class="admin-remove-btn" onclick="removeBr('${doc.id}')"><i class="bi bi-x-lg"></i></button>
+            </div>`;
+    });
+}
+
+document.getElementById('br-add').addEventListener('click', async () => {
+    const name = document.getElementById('br-name').value.trim();
+    const link = document.getElementById('br-link').value.trim();
+    const file = document.getElementById('br-file').files[0];
+    if (!name || !file) { alert('Inserisci nome e logo.'); return; }
+
+    const btn = document.getElementById('br-add');
+    btn.disabled = true; btn.textContent = 'Caricamento...';
+
+    try {
+        const logoUrl = await uploadFile(file, 'brands', document.getElementById('br-progress-bar'));
+        await db.collection('brands').add({ name, logo: logoUrl, link: link || '#', createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+        document.getElementById('br-name').value = '';
+        document.getElementById('br-link').value = '';
+        document.getElementById('br-file').value = '';
+        document.querySelector('#br-upload-area .upload-label').textContent = 'Carica logo (SVG/PNG)';
+        await renderBrList();
+    } catch (err) { alert('Errore: ' + err.message); }
+    btn.disabled = false; btn.innerHTML = '<i class="bi bi-plus-lg"></i> Aggiungi';
+});
+
+window.removeBr = async function(id) {
+    if (!confirm('Rimuovere questo brand?')) return;
+    await db.collection('brands').doc(id).delete();
+    renderBrList();
+};
+
+// ============ TESTIMONIALS ============
+async function renderTsList() {
+    const list = document.getElementById('ts-list');
+    const snap = await db.collection('testimonials').orderBy('createdAt', 'desc').get();
+    if (snap.empty) { list.innerHTML = '<div class="admin-empty">Nessuna recensione aggiunta.</div>'; return; }
+    list.innerHTML = '';
+    snap.forEach(doc => {
+        const d = doc.data();
+        list.innerHTML += `
+            <div class="admin-item">
+                <img src="${d.photo || './assets/images/people/man.jpg'}" alt="" class="admin-item-img" style="border-radius:50%;" onerror="this.style.display='none'" />
+                <div class="admin-item-info">
+                    <strong>${d.name}</strong>
+                    <span>${d.role || ''} — "${(d.text || '').substring(0, 60)}${(d.text || '').length > 60 ? '...' : ''}"</span>
+                </div>
+                <button class="admin-remove-btn" onclick="removeTs('${doc.id}')"><i class="bi bi-x-lg"></i></button>
+            </div>`;
+    });
+}
+
+document.getElementById('ts-add').addEventListener('click', async () => {
+    const name = document.getElementById('ts-name').value.trim();
+    const role = document.getElementById('ts-role').value.trim();
+    const text = document.getElementById('ts-text').value.trim();
+    const file = document.getElementById('ts-file').files[0];
+    if (!name || !text) { alert('Inserisci nome e testo.'); return; }
+
+    const btn = document.getElementById('ts-add');
+    btn.disabled = true; btn.textContent = 'Caricamento...';
+
+    try {
+        let photoUrl = '';
+        if (file) {
+            photoUrl = await uploadFile(file, 'testimonials', document.getElementById('ts-progress-bar'));
+        }
+        await db.collection('testimonials').add({ name, role, text, photo: photoUrl, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+        document.getElementById('ts-name').value = '';
+        document.getElementById('ts-role').value = '';
+        document.getElementById('ts-text').value = '';
+        document.getElementById('ts-file').value = '';
+        document.querySelector('#ts-upload-area .upload-label').textContent = 'Carica foto (opzionale)';
+        await renderTsList();
+    } catch (err) { alert('Errore: ' + err.message); }
+    btn.disabled = false; btn.innerHTML = '<i class="bi bi-plus-lg"></i> Aggiungi';
+});
+
+window.removeTs = async function(id) {
+    if (!confirm('Rimuovere questa recensione?')) return;
+    await db.collection('testimonials').doc(id).delete();
+    renderTsList();
+};
+
+// ============ LOAD ALL ============
+function loadAll() {
+    renderPfList();
+    renderBrList();
+    renderTsList();
+}
+</script>
+</body>
+</html>
