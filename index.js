@@ -58,7 +58,7 @@ async function loadFirestoreData() {
         const db = firebase.firestore();
 
         // Load Portfolio
-        const portfolioSnap = await db.collection('portfolio').orderBy('createdAt', 'desc').get();
+        const portfolioSnap = await db.collection('portfolio').orderBy('order', 'asc').get();
         if (!portfolioSnap.empty) {
             const grid = document.getElementById('portfolio-grid');
             if (grid) {
@@ -79,7 +79,7 @@ async function loadFirestoreData() {
         }
 
         // Load Brands
-        const brandsSnap = await db.collection('brands').orderBy('createdAt', 'desc').get();
+        const brandsSnap = await db.collection('brands').orderBy('order', 'asc').get();
         if (!brandsSnap.empty) {
             const track = document.getElementById('brands-track');
             if (track) {
@@ -100,7 +100,7 @@ async function loadFirestoreData() {
         }
 
         // Load Testimonials
-        const testimonialsSnap = await db.collection('testimonials').orderBy('createdAt', 'desc').get();
+        const testimonialsSnap = await db.collection('testimonials').orderBy('order', 'asc').get();
         if (!testimonialsSnap.empty) {
             const grid = document.getElementById('testimonials-grid');
             if (grid) {

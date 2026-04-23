@@ -111,7 +111,6 @@ async function doLogin() {
     const email = document.getElementById('auth-email').value.trim();
     const pw = document.getElementById('auth-password').value;
     if (!email || !pw) return;
-
     try {
         await auth.signInWithEmailAndPassword(email, pw);
     } catch (err) {
@@ -134,7 +133,6 @@ function getAuthErrorMessage(code) {
 
 logoutBtn.addEventListener('click', () => auth.signOut());
 
-// Listen for auth state
 auth.onAuthStateChanged(user => {
     if (user) {
         gate.style.display = 'none';
@@ -153,59 +151,70 @@ async function uploadFile(file, folder, progressBar) {
     const fileName = Date.now() + '_' + file.name.replace(/[^a-zA-Z0-9._-]/g, '');
     const ref = storage.ref(`${folder}/${fileName}`);
     const task = ref.put(file);
-
-    if (progressBar) {
-        progressBar.parentElement.classList.add('active');
-    }
+    if (progressBar) progressBar.parentElement.classList.add('active');
 
     return new Promise((resolve, reject) => {
         task.on('state_changed',
-            snap => {
-                const pct = (snap.bytesTransferred / snap.totalBytes) * 100;
-                if (progressBar) progressBar.style.width = pct + '%';
-            },
-            err => { reject(err); },
+            snap => { if (progressBar) progressBar.style.width = ((snap.bytesTransferred / snap.totalBytes) * 100) + '%'; },
+            err => reject(err),
             async () => {
                 const url = await task.snapshot.ref.getDownloadURL();
-                if (progressBar) {
-                    progressBar.style.width = '100%';
-                    setTimeout(() => { progressBar.parentElement.classList.remove('active'); progressBar.style.width = '0%'; }, 600);
-                }
+                if (progressBar) { progressBar.style.width = '100%'; setTimeout(() => { progressBar.parentElement.classList.remove('active'); progressBar.style.width = '0%'; }, 600); }
                 resolve(url);
             }
         );
     });
 }
 
-// File preview on upload areas
 document.querySelectorAll('.admin-upload-area input[type="file"]').forEach(input => {
     input.addEventListener('change', () => {
-        const area = input.closest('.admin-upload-area');
-        const label = area.querySelector('.upload-label');
-        if (input.files.length > 0) {
-            label.textContent = input.files[0].name;
-        }
+        const label = input.closest('.admin-upload-area').querySelector('.upload-label');
+        if (input.files.length > 0) label.textContent = input.files[0].name;
     });
 });
+
+// ============ REORDER HELPER ============
+async function swapOrder(collection, docs, fromIndex, toIndex, renderFn) {
+    if (toIndex < 0 || toIndex >= docs.length) return;
+    const a = docs[fromIndex], b = docs[toIndex];
+    const batch = db.batch();
+    batch.update(db.collection(collection).doc(a.id), { order: b.data().order ?? toIndex });
+    batch.update(db.collection(collection).doc(b.id), { order: a.data().order ?? fromIndex });
+    await batch.commit();
+    await renderFn();
+}
+
+function orderButtons(collection, docs, index, renderFn) {
+    return `<div class="admin-item-actions">
+        <button class="admin-order-btn" onclick="moveItem('${collection}', ${index}, ${index - 1}, '${renderFn}')" ${index === 0 ? 'disabled' : ''}><i class="bi bi-chevron-up"></i></button>
+        <button class="admin-order-btn" onclick="moveItem('${collection}', ${index}, ${index + 1}, '${renderFn}')" ${index === docs.length - 1 ? 'disabled' : ''}><i class="bi bi-chevron-down"></i></button>
+    </div>`;
+}
+
+// Cache docs for swap reference
+let pfDocs = [], brDocs = [], tsDocs = [];
+
+window.moveItem = async function(collection, from, to, fnName) {
+    const docsMap = { portfolio: pfDocs, brands: brDocs, testimonials: tsDocs };
+    const fnMap = { renderPfList, renderBrList, renderTsList };
+    await swapOrder(collection, docsMap[collection], from, to, fnMap[fnName]);
+};
 
 // ============ PORTFOLIO ============
 async function renderPfList() {
     const list = document.getElementById('pf-list');
-    const snap = await db.collection('portfolio').orderBy('createdAt', 'desc').get();
+    const snap = await db.collection('portfolio').orderBy('order', 'asc').get();
+    pfDocs = snap.docs;
     if (snap.empty) { list.innerHTML = '<div class="admin-empty">Nessun progetto aggiunto.</div>'; return; }
-    list.innerHTML = '';
-    snap.forEach(doc => {
+    list.innerHTML = pfDocs.map((doc, i) => {
         const d = doc.data();
-        list.innerHTML += `
-            <div class="admin-item">
-                <img src="${d.image}" alt="" class="admin-item-img" onerror="this.style.display='none'" />
-                <div class="admin-item-info">
-                    <strong>${d.title}</strong>
-                    <span>${d.description || ''}</span>
-                </div>
-                <button class="admin-remove-btn" onclick="removePf('${doc.id}')"><i class="bi bi-x-lg"></i></button>
-            </div>`;
-    });
+        return `<div class="admin-item">
+            <img src="${d.image}" alt="" class="admin-item-img" onerror="this.style.display='none'" />
+            <div class="admin-item-info"><strong>${d.title}</strong><span>${d.description || ''}</span></div>
+            ${orderButtons('portfolio', pfDocs, i, 'renderPfList')}
+            <button class="admin-remove-btn" onclick="removePf('${doc.id}')"><i class="bi bi-x-lg"></i></button>
+        </div>`;
+    }).join('');
 }
 
 document.getElementById('pf-add').addEventListener('click', async () => {
@@ -213,16 +222,13 @@ document.getElementById('pf-add').addEventListener('click', async () => {
     const desc = document.getElementById('pf-desc').value.trim();
     const file = document.getElementById('pf-file').files[0];
     if (!title || !file) { alert('Inserisci titolo e immagine.'); return; }
-
     const btn = document.getElementById('pf-add');
     btn.disabled = true; btn.textContent = 'Caricamento...';
-
     try {
         const imageUrl = await uploadFile(file, 'portfolio', document.getElementById('pf-progress-bar'));
-        await db.collection('portfolio').add({ title, description: desc, image: imageUrl, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
-        document.getElementById('pf-title').value = '';
-        document.getElementById('pf-desc').value = '';
-        document.getElementById('pf-file').value = '';
+        const count = (await db.collection('portfolio').get()).size;
+        await db.collection('portfolio').add({ title, description: desc, image: imageUrl, order: count, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+        document.getElementById('pf-title').value = ''; document.getElementById('pf-desc').value = ''; document.getElementById('pf-file').value = '';
         document.querySelector('#pf-upload-area .upload-label').textContent = 'Trascina un\'immagine o clicca per caricare';
         await renderPfList();
     } catch (err) { alert('Errore: ' + err.message); }
@@ -238,21 +244,18 @@ window.removePf = async function(id) {
 // ============ BRANDS ============
 async function renderBrList() {
     const list = document.getElementById('br-list');
-    const snap = await db.collection('brands').orderBy('createdAt', 'desc').get();
+    const snap = await db.collection('brands').orderBy('order', 'asc').get();
+    brDocs = snap.docs;
     if (snap.empty) { list.innerHTML = '<div class="admin-empty">Nessun brand aggiunto.</div>'; return; }
-    list.innerHTML = '';
-    snap.forEach(doc => {
+    list.innerHTML = brDocs.map((doc, i) => {
         const d = doc.data();
-        list.innerHTML += `
-            <div class="admin-item">
-                <img src="${d.logo}" alt="" class="admin-item-img" style="background:#222;padding:4px;" onerror="this.style.display='none'" />
-                <div class="admin-item-info">
-                    <strong>${d.name}</strong>
-                    <span>${d.link || 'Nessun link'}</span>
-                </div>
-                <button class="admin-remove-btn" onclick="removeBr('${doc.id}')"><i class="bi bi-x-lg"></i></button>
-            </div>`;
-    });
+        return `<div class="admin-item">
+            <img src="${d.logo}" alt="" class="admin-item-img" style="background:#222;padding:4px;" onerror="this.style.display='none'" />
+            <div class="admin-item-info"><strong>${d.name}</strong><span>${d.link || 'Nessun link'}</span></div>
+            ${orderButtons('brands', brDocs, i, 'renderBrList')}
+            <button class="admin-remove-btn" onclick="removeBr('${doc.id}')"><i class="bi bi-x-lg"></i></button>
+        </div>`;
+    }).join('');
 }
 
 document.getElementById('br-add').addEventListener('click', async () => {
@@ -260,16 +263,13 @@ document.getElementById('br-add').addEventListener('click', async () => {
     const link = document.getElementById('br-link').value.trim();
     const file = document.getElementById('br-file').files[0];
     if (!name || !file) { alert('Inserisci nome e logo.'); return; }
-
     const btn = document.getElementById('br-add');
     btn.disabled = true; btn.textContent = 'Caricamento...';
-
     try {
         const logoUrl = await uploadFile(file, 'brands', document.getElementById('br-progress-bar'));
-        await db.collection('brands').add({ name, logo: logoUrl, link: link || '#', createdAt: firebase.firestore.FieldValue.serverTimestamp() });
-        document.getElementById('br-name').value = '';
-        document.getElementById('br-link').value = '';
-        document.getElementById('br-file').value = '';
+        const count = (await db.collection('brands').get()).size;
+        await db.collection('brands').add({ name, logo: logoUrl, link: link || '#', order: count, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+        document.getElementById('br-name').value = ''; document.getElementById('br-link').value = ''; document.getElementById('br-file').value = '';
         document.querySelector('#br-upload-area .upload-label').textContent = 'Carica logo (SVG/PNG)';
         await renderBrList();
     } catch (err) { alert('Errore: ' + err.message); }
@@ -285,21 +285,18 @@ window.removeBr = async function(id) {
 // ============ TESTIMONIALS ============
 async function renderTsList() {
     const list = document.getElementById('ts-list');
-    const snap = await db.collection('testimonials').orderBy('createdAt', 'desc').get();
+    const snap = await db.collection('testimonials').orderBy('order', 'asc').get();
+    tsDocs = snap.docs;
     if (snap.empty) { list.innerHTML = '<div class="admin-empty">Nessuna recensione aggiunta.</div>'; return; }
-    list.innerHTML = '';
-    snap.forEach(doc => {
+    list.innerHTML = tsDocs.map((doc, i) => {
         const d = doc.data();
-        list.innerHTML += `
-            <div class="admin-item">
-                <img src="${d.photo || './assets/images/people/man.jpg'}" alt="" class="admin-item-img" style="border-radius:50%;" onerror="this.style.display='none'" />
-                <div class="admin-item-info">
-                    <strong>${d.name}</strong>
-                    <span>${d.role || ''} — "${(d.text || '').substring(0, 60)}${(d.text || '').length > 60 ? '...' : ''}"</span>
-                </div>
-                <button class="admin-remove-btn" onclick="removeTs('${doc.id}')"><i class="bi bi-x-lg"></i></button>
-            </div>`;
-    });
+        return `<div class="admin-item">
+            <img src="${d.photo || './assets/images/people/man.jpg'}" alt="" class="admin-item-img" style="border-radius:50%;" onerror="this.style.display='none'" />
+            <div class="admin-item-info"><strong>${d.name}</strong><span>${d.role || ''} — "${(d.text || '').substring(0, 60)}${(d.text || '').length > 60 ? '...' : ''}"</span></div>
+            ${orderButtons('testimonials', tsDocs, i, 'renderTsList')}
+            <button class="admin-remove-btn" onclick="removeTs('${doc.id}')"><i class="bi bi-x-lg"></i></button>
+        </div>`;
+    }).join('');
 }
 
 document.getElementById('ts-add').addEventListener('click', async () => {
@@ -308,20 +305,14 @@ document.getElementById('ts-add').addEventListener('click', async () => {
     const text = document.getElementById('ts-text').value.trim();
     const file = document.getElementById('ts-file').files[0];
     if (!name || !text) { alert('Inserisci nome e testo.'); return; }
-
     const btn = document.getElementById('ts-add');
     btn.disabled = true; btn.textContent = 'Caricamento...';
-
     try {
         let photoUrl = '';
-        if (file) {
-            photoUrl = await uploadFile(file, 'testimonials', document.getElementById('ts-progress-bar'));
-        }
-        await db.collection('testimonials').add({ name, role, text, photo: photoUrl, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
-        document.getElementById('ts-name').value = '';
-        document.getElementById('ts-role').value = '';
-        document.getElementById('ts-text').value = '';
-        document.getElementById('ts-file').value = '';
+        if (file) photoUrl = await uploadFile(file, 'testimonials', document.getElementById('ts-progress-bar'));
+        const count = (await db.collection('testimonials').get()).size;
+        await db.collection('testimonials').add({ name, role, text, photo: photoUrl, order: count, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+        document.getElementById('ts-name').value = ''; document.getElementById('ts-role').value = ''; document.getElementById('ts-text').value = ''; document.getElementById('ts-file').value = '';
         document.querySelector('#ts-upload-area .upload-label').textContent = 'Carica foto (opzionale)';
         await renderTsList();
     } catch (err) { alert('Errore: ' + err.message); }
@@ -335,11 +326,7 @@ window.removeTs = async function(id) {
 };
 
 // ============ LOAD ALL ============
-function loadAll() {
-    renderPfList();
-    renderBrList();
-    renderTsList();
-}
+function loadAll() { renderPfList(); renderBrList(); renderTsList(); }
 </script>
 </body>
 </html>

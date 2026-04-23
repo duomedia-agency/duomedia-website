@@ -211,6 +211,8 @@ body.light-theme .site-header.header-scrolled { background: rgba(245,245,247,0.8
 .carousel-item { flex-shrink: 0; height: 28px; width: 140px; margin: 0 2rem; opacity: 0.4; transition: opacity var(--transition); }
 .carousel-item:hover { opacity: 1; }
 .carousel-item img { height: 100%; width: 100%; object-fit: contain; }
+body.light-theme .carousel-item img { filter: invert(1) brightness(0.2); }
+body.light-theme .carousel-item { opacity: 0.5; }
 
 @keyframes carousel-scroll {
   0% { transform: translateX(0); }
@@ -452,6 +454,15 @@ textarea.contact-input { min-height: 120px; resize: vertical; }
   border-radius: 6px; cursor: pointer; font-size: 0.85rem; transition: all var(--transition);
 }
 .admin-remove-btn:hover { background: rgba(239,68,68,0.25); }
+
+.admin-item-actions { display: flex; flex-direction: column; gap: 2px; flex-shrink: 0; }
+.admin-order-btn {
+  padding: 0.2rem 0.45rem; background: rgba(255,255,255,0.06); border: 1px solid var(--border);
+  border-radius: 4px; cursor: pointer; font-size: 0.7rem; color: var(--text-muted);
+  transition: all var(--transition); line-height: 1;
+}
+.admin-order-btn:hover { background: rgba(0,150,255,0.15); color: var(--primary); border-color: var(--primary); }
+.admin-order-btn:disabled { opacity: 0.2; cursor: default; }
 
 .admin-empty { color: var(--text-muted); font-size: 0.9rem; font-style: italic; padding: 0.5rem 0; }
 
