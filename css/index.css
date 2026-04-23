@@ -204,11 +204,17 @@ body.light-theme .site-header.header-scrolled { background: rgba(245,245,247,0.8
   filter: drop-shadow(0 0 20px rgba(0,150,255,0.4)) brightness(1.15);
 }
 
-/* ============ BRAND GRID ============ */
+/* ============ BRAND GRID (Scrollable) ============ */
 .brands { padding: 2.5rem 0; overflow: hidden; }
 .brands-title { text-align: center; font-size: 1.1rem; color: var(--text-muted); margin-bottom: 1.5rem; font-weight: 500; }
-.brands-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 3.5rem 4rem; align-items: center; max-width: 1000px; margin: 0 auto; }
-.brand-item { display: flex; align-items: center; justify-content: center; width: 140px; height: 60px; opacity: 0.5; transition: opacity var(--transition), transform var(--transition); }
+.brands-grid { display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 4rem; align-items: center; justify-content: flex-start; max-width: 1000px; margin: 0 auto; padding-bottom: 1rem; scroll-behavior: smooth; }
+/* Custom Scrollbar for Brands */
+.brands-grid::-webkit-scrollbar { height: 8px; }
+.brands-grid::-webkit-scrollbar-track { background: var(--bg-card); border-radius: 10px; }
+.brands-grid::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+.brands-grid::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+.brand-item { display: flex; align-items: center; justify-content: center; width: 200px; height: 90px; flex-shrink: 0; opacity: 0.5; transition: opacity var(--transition), transform var(--transition); }
 .brand-item:hover { opacity: 1; transform: scale(1.05); }
 .brand-item img { max-width: 100%; max-height: 100%; object-fit: contain; }
 body.light-theme .brand-item img { filter: invert(1) brightness(0.2); }
