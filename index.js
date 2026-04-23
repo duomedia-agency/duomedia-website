@@ -44,28 +44,22 @@ document.querySelectorAll('.faq-question').forEach(btn => {
     });
 });
 
-// ============ FIRESTORE DATA LOADING ============
-// Reads from Firestore and renders sections. Falls back to hardcoded HTML if Firestore is unavailable.
+// ============ DATA LOADING ============
+// Reads from data.json and renders sections.
 
-async function loadFirestoreData() {
+async function loadData() {
     try {
-        // Check if Firebase is configured (not placeholder)
-        if (!firebase.apps.length || firebase.app().options.apiKey === 'YOUR_API_KEY') {
-            console.log('Firebase not configured — using hardcoded content.');
-            return;
-        }
-
-        const db = firebase.firestore();
+        const res = await fetch('./data.json');
+        if (!res.ok) throw new Error('data.json not found');
+        const data = await res.json();
 
         // Load Portfolio
-        const portfolioSnap = await db.collection('portfolio').get();
-        const portfolioDocs = portfolioSnap.docs.sort((a, b) => (a.data().order ?? 9999) - (b.data().order ?? 9999));
-        if (portfolioDocs.length > 0) {
+        const portfolio = (data.portfolio || []).sort((a, b) => (a.order ?? 9999) - (b.order ?? 9999));
+        if (portfolio.length > 0) {
             const grid = document.getElementById('portfolio-grid');
             if (grid) {
                 grid.innerHTML = '';
-                portfolioDocs.forEach(doc => {
-                    const d = doc.data();
+                portfolio.forEach(d => {
                     const card = document.createElement('div');
                     card.className = 'portfolio-card reveal-up';
                     card.innerHTML = `
@@ -80,15 +74,13 @@ async function loadFirestoreData() {
         }
 
         // Load Brands
-        const brandsSnap = await db.collection('brands').get();
-        const brandsDocs = brandsSnap.docs.sort((a, b) => (a.data().order ?? 9999) - (b.data().order ?? 9999));
+        const brandsDocs = (data.brands || []).sort((a, b) => (a.order ?? 9999) - (b.order ?? 9999));
         if (brandsDocs.length > 0) {
             const track = document.getElementById('brands-track');
             if (track) {
                 track.innerHTML = '';
-                const brands = brandsDocs.map(doc => doc.data());
                 // Original + duplicate for infinite scroll
-                [...brands, ...brands].forEach(b => {
+                [...brandsDocs, ...brandsDocs].forEach(b => {
                     const a = document.createElement('a');
                     a.href = b.link || '#';
                     a.className = 'carousel-item';
@@ -101,14 +93,12 @@ async function loadFirestoreData() {
         }
 
         // Load Testimonials
-        const testimonialsSnap = await db.collection('testimonials').get();
-        const testimonialsDocs = testimonialsSnap.docs.sort((a, b) => (a.data().order ?? 9999) - (b.data().order ?? 9999));
+        const testimonialsDocs = (data.testimonials || []).sort((a, b) => (a.order ?? 9999) - (b.order ?? 9999));
         if (testimonialsDocs.length > 0) {
             const grid = document.getElementById('testimonials-grid');
             if (grid) {
                 grid.innerHTML = '';
-                testimonialsDocs.forEach(doc => {
-                    const d = doc.data();
+                testimonialsDocs.forEach(d => {
                     const card = document.createElement('div');
                     card.className = 'testimonial-card reveal-up';
                     card.innerHTML = `
@@ -125,12 +115,12 @@ async function loadFirestoreData() {
             }
         }
     } catch (err) {
-        console.warn('Firestore load error (using hardcoded fallback):', err.message);
+        console.warn('Data load error (using hardcoded fallback):', err.message);
     }
 }
 
 // Load data then init animations
-loadFirestoreData().then(() => {
+loadData().then(() => {
     initAnimations();
 });
 

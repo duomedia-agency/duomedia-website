@@ -1,95 +1,13 @@
-<!doctype html>
-<html lang="it">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin — Duo Media</title>
-    <link rel="shortcut icon" href="./assets/logo/Favicon.png" type="image/png" />
-    <link rel="stylesheet" href="css/index.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css"
-          integrity="sha512-dPXYcDub/aeb08c63jRq/k6GaKccl256JQy/AnOq7CAnEZ9FzSL9wSbcZkMp4R26vBsMLFYH4kQ67/bbV8XaCQ=="
-          crossorigin="anonymous" referrerpolicy="no-referrer" />
-</head>
-<body>
+const fs = require('fs');
 
-    <!-- ========== LOGIN GATE ========== -->
-    <div class="admin-gate" id="admin-gate">
-        <img src="./assets/logo/DUO_Simbolo_Bianco.png" alt="Duo Media" style="width:80px; margin-bottom:0.5rem;" class="invert-on-light" />
-        <h1>Area Riservata</h1>
-        <p>Inserisci il tuo GitHub Personal Access Token.</p>
-        <input type="email" class="admin-pw-input" id="auth-email" placeholder="Email" autocomplete="email" />
-        <input type="password" class="admin-pw-input" id="auth-password" placeholder="Password" autocomplete="current-password" />
-        <button class="admin-pw-btn" id="auth-btn">Accedi</button>
-        <div class="admin-error" id="auth-error"></div>
-    </div>
+let html = fs.readFileSync('admin.html', 'utf8');
+const startIndex = html.indexOf('    <!-- ========== SCRIPTS ========== -->');
 
-    <!-- ========== LOGOUT BUTTON ========== -->
-    <button class="admin-logout-btn" id="logout-btn"><i class="bi bi-box-arrow-right"></i> Logout</button>
+if (startIndex !== -1) {
+    html = html.substring(0, startIndex);
+}
 
-    <!-- ========== ADMIN DASHBOARD ========== -->
-    <div class="admin-dashboard" id="admin-dashboard">
-        <h1><i class="bi bi-gear-fill" style="color:var(--primary);"></i> Pannello Admin</h1>
-
-        <!-- PORTFOLIO -->
-        <div class="admin-section">
-            <h2><i class="bi bi-images"></i> Portfolio — I Nostri Progetti</h2>
-            <div class="admin-form" id="portfolio-form">
-                <input type="text" placeholder="Titolo progetto" id="pf-title" />
-                <textarea placeholder="Descrizione breve" id="pf-desc"></textarea>
-                <div class="admin-upload-area" id="pf-upload-area">
-                    <i class="bi bi-cloud-arrow-up"></i>
-                    <span class="upload-label">Trascina un'immagine o clicca per caricare</span>
-                    <input type="file" accept="image/*" id="pf-file" />
-                </div>
-                <div class="admin-upload-progress" id="pf-progress"><div class="admin-upload-progress-bar" id="pf-progress-bar"></div></div>
-                <button class="admin-add-btn" id="pf-add"><i class="bi bi-plus-lg"></i> Aggiungi</button>
-            </div>
-            <div class="admin-items" id="pf-list"></div>
-        </div>
-
-        <!-- BRANDS -->
-        <div class="admin-section">
-            <h2><i class="bi bi-building"></i> Brand — Carousel Loghi</h2>
-            <div class="admin-form" id="brands-form">
-                <input type="text" placeholder="Nome brand" id="br-name" />
-                <input type="text" placeholder="Link sito web" id="br-link" />
-                <div class="admin-upload-area" id="br-upload-area">
-                    <i class="bi bi-cloud-arrow-up"></i>
-                    <span class="upload-label">Carica logo (SVG/PNG)</span>
-                    <input type="file" accept="image/*" id="br-file" />
-                </div>
-                <div class="admin-upload-progress" id="br-progress"><div class="admin-upload-progress-bar" id="br-progress-bar"></div></div>
-                <button class="admin-add-btn" id="br-add"><i class="bi bi-plus-lg"></i> Aggiungi</button>
-            </div>
-            <div class="admin-items" id="br-list"></div>
-        </div>
-
-        <!-- TESTIMONIALS -->
-        <div class="admin-section">
-            <h2><i class="bi bi-chat-quote-fill"></i> Recensioni — Dicono di noi</h2>
-            <div class="admin-form" id="testimonials-form">
-                <input type="text" placeholder="Nome" id="ts-name" />
-                <input type="text" placeholder="Ruolo (es. CEO, TechNova)" id="ts-role" />
-                <textarea placeholder="Testo recensione" id="ts-text"></textarea>
-                <div class="admin-upload-area" id="ts-upload-area">
-                    <i class="bi bi-cloud-arrow-up"></i>
-                    <span class="upload-label">Carica foto (opzionale)</span>
-                    <input type="file" accept="image/*" id="ts-file" />
-                </div>
-                <div class="admin-upload-progress" id="ts-progress"><div class="admin-upload-progress-bar" id="ts-progress-bar"></div></div>
-                <button class="admin-add-btn" id="ts-add"><i class="bi bi-plus-lg"></i> Aggiungi</button>
-            </div>
-            <div class="admin-items" id="ts-list"></div>
-        </div>
-
-        <div style="text-align:center; margin-top:2rem; padding-bottom:2rem;">
-            <p style="color:var(--text-muted); font-size:0.85rem;">
-                <i class="bi bi-github"></i> I dati vengono salvati sul repository GitHub. Le modifiche al sito pubblico potrebbero richiedere 1-2 minuti.
-            </p>
-        </div>
-    </div>
-
-    <!-- ========== SCRIPTS ========== -->
+const newScript = `    <!-- ========== SCRIPTS ========== -->
 <script>
 // ============ CONFIGURATION ============
 const REPO_OWNER = 'duomedia-agency';
@@ -122,8 +40,8 @@ async function doLogin() {
     
     // Verify token by trying to fetch the repository
     try {
-        const res = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`, {
-            headers: { 'Authorization': `token ${token}` }
+        const res = await fetch(\`https://api.github.com/repos/\${REPO_OWNER}/\${REPO_NAME}\`, {
+            headers: { 'Authorization': \`token \${token}\` }
         });
         
         if (!res.ok) throw new Error('Token non valido o permessi insufficienti');
@@ -167,7 +85,7 @@ if (githubToken) {
 // ============ GITHUB API HELPERS ============
 async function fetchWithToken(url, options = {}) {
     const defaultHeaders = {
-        'Authorization': `token ${githubToken}`,
+        'Authorization': \`token \${githubToken}\`,
         'Accept': 'application/vnd.github.v3+json',
         'Content-Type': 'application/json'
     };
@@ -178,7 +96,7 @@ async function fetchWithToken(url, options = {}) {
             alert("Token scaduto o non valido. Fai il login di nuovo.");
             logoutBtn.click();
         }
-        throw new Error(`GitHub API Error: ${res.statusText}`);
+        throw new Error(\`GitHub API Error: \${res.statusText}\`);
     }
     return res.json();
 }
@@ -194,9 +112,9 @@ function b64EncodeUnicode(str) {
 async function loadDataFromGitHub() {
     try {
         // Fetch the file from GitHub API to get the content and SHA
-        const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/data.json?ref=${BRANCH}`;
+        const url = \`https://api.github.com/repos/\${REPO_OWNER}/\${REPO_NAME}/contents/data.json?ref=\${BRANCH}\`;
         
-        const response = await fetch(url, { headers: { 'Authorization': `token ${githubToken}` } });
+        const response = await fetch(url, { headers: { 'Authorization': \`token \${githubToken}\` } });
         
         if (response.status === 404) {
             // File doesn't exist yet, we will create it on first save
@@ -232,7 +150,7 @@ async function saveDataToGitHub() {
     const jsonString = JSON.stringify(siteData, null, 2);
     const contentBase64 = b64EncodeUnicode(jsonString);
     
-    const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/data.json`;
+    const url = \`https://api.github.com/repos/\${REPO_OWNER}/\${REPO_NAME}/contents/data.json\`;
     
     const body = {
         message: 'Aggiornamento dati (via admin panel)',
@@ -269,13 +187,13 @@ function getBase64(file) {
 
 async function uploadFileToGitHub(file, folder, progressBar) {
     const fileName = Date.now() + '_' + file.name.replace(/[^a-zA-Z0-9._-]/g, '');
-    const path = `assets/uploads/${folder}/${fileName}`;
+    const path = \`assets/uploads/\${folder}/\${fileName}\`;
     
     if (progressBar) progressBar.parentElement.classList.add('active');
     
     const base64Content = await getBase64(file);
     
-    const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`;
+    const url = \`https://api.github.com/repos/\${REPO_OWNER}/\${REPO_NAME}/contents/\${path}\`;
     
     try {
         if (progressBar) progressBar.style.width = '50%';
@@ -283,7 +201,7 @@ async function uploadFileToGitHub(file, folder, progressBar) {
         await fetchWithToken(url, {
             method: 'PUT',
             body: JSON.stringify({
-                message: `Upload immagine ${fileName}`,
+                message: \`Upload immagine \${fileName}\`,
                 content: base64Content,
                 branch: BRANCH
             })
@@ -298,7 +216,7 @@ async function uploadFileToGitHub(file, folder, progressBar) {
         }
         
         // Return the GitHub Pages URL for the image
-        return `./${path}`;
+        return \`./\${path}\`;
         
     } catch (err) {
         if (progressBar) progressBar.parentElement.classList.remove('active');
@@ -338,10 +256,10 @@ async function moveItem(collection, index, direction) {
 }
 
 function orderButtons(collection, index, total) {
-    return `<div class="admin-item-actions">
-        <button class="admin-order-btn" onclick="moveItem('${collection}', ${index}, -1)" ${index === 0 ? 'disabled' : ''}><i class="bi bi-chevron-up"></i></button>
-        <button class="admin-order-btn" onclick="moveItem('${collection}', ${index}, 1)" ${index === total - 1 ? 'disabled' : ''}><i class="bi bi-chevron-down"></i></button>
-    </div>`;
+    return \`<div class="admin-item-actions">
+        <button class="admin-order-btn" onclick="moveItem('\${collection}', \${index}, -1)" \${index === 0 ? 'disabled' : ''}><i class="bi bi-chevron-up"></i></button>
+        <button class="admin-order-btn" onclick="moveItem('\${collection}', \${index}, 1)" \${index === total - 1 ? 'disabled' : ''}><i class="bi bi-chevron-down"></i></button>
+    </div>\`;
 }
 
 // ============ PORTFOLIO ============
@@ -351,14 +269,14 @@ function renderPfList() {
     
     if (arr.length === 0) { list.innerHTML = '<div class="admin-empty">Nessun progetto aggiunto.</div>'; return; }
     
-    list.innerHTML = arr.map((d, i) => `
+    list.innerHTML = arr.map((d, i) => \`
         <div class="admin-item">
-            <img src="${d.image}" alt="" class="admin-item-img" onerror="this.style.display='none'" />
-            <div class="admin-item-info"><strong>${d.title}</strong><span>${d.description || ''}</span></div>
-            ${orderButtons('portfolio', i, arr.length)}
-            <button class="admin-remove-btn" onclick="removePf('${d.id}')"><i class="bi bi-x-lg"></i></button>
+            <img src="\${d.image}" alt="" class="admin-item-img" onerror="this.style.display='none'" />
+            <div class="admin-item-info"><strong>\${d.title}</strong><span>\${d.description || ''}</span></div>
+            \${orderButtons('portfolio', i, arr.length)}
+            <button class="admin-remove-btn" onclick="removePf('\${d.id}')"><i class="bi bi-x-lg"></i></button>
         </div>
-    `).join('');
+    \`).join('');
 }
 
 document.getElementById('pf-add').addEventListener('click', async () => {
@@ -410,14 +328,14 @@ function renderBrList() {
     
     if (arr.length === 0) { list.innerHTML = '<div class="admin-empty">Nessun brand aggiunto.</div>'; return; }
     
-    list.innerHTML = arr.map((d, i) => `
+    list.innerHTML = arr.map((d, i) => \`
         <div class="admin-item">
-            <img src="${d.logo}" alt="" class="admin-item-img" style="background:#222;padding:4px;" onerror="this.style.display='none'" />
-            <div class="admin-item-info"><strong>${d.name}</strong><span>${d.link || 'Nessun link'}</span></div>
-            ${orderButtons('brands', i, arr.length)}
-            <button class="admin-remove-btn" onclick="removeBr('${d.id}')"><i class="bi bi-x-lg"></i></button>
+            <img src="\${d.logo}" alt="" class="admin-item-img" style="background:#222;padding:4px;" onerror="this.style.display='none'" />
+            <div class="admin-item-info"><strong>\${d.name}</strong><span>\${d.link || 'Nessun link'}</span></div>
+            \${orderButtons('brands', i, arr.length)}
+            <button class="admin-remove-btn" onclick="removeBr('\${d.id}')"><i class="bi bi-x-lg"></i></button>
         </div>
-    `).join('');
+    \`).join('');
 }
 
 document.getElementById('br-add').addEventListener('click', async () => {
@@ -469,14 +387,14 @@ function renderTsList() {
     
     if (arr.length === 0) { list.innerHTML = '<div class="admin-empty">Nessuna recensione aggiunta.</div>'; return; }
     
-    list.innerHTML = arr.map((d, i) => `
+    list.innerHTML = arr.map((d, i) => \`
         <div class="admin-item">
-            <img src="${d.photo || './assets/images/people/man.jpg'}" alt="" class="admin-item-img" style="border-radius:50%;" onerror="this.style.display='none'" />
-            <div class="admin-item-info"><strong>${d.name}</strong><span>${d.role || ''} — "${(d.text || '').substring(0, 60)}${(d.text || '').length > 60 ? '...' : ''}"</span></div>
-            ${orderButtons('testimonials', i, arr.length)}
-            <button class="admin-remove-btn" onclick="removeTs('${d.id}')"><i class="bi bi-x-lg"></i></button>
+            <img src="\${d.photo || './assets/images/people/man.jpg'}" alt="" class="admin-item-img" style="border-radius:50%;" onerror="this.style.display='none'" />
+            <div class="admin-item-info"><strong>\${d.name}</strong><span>\${d.role || ''} — "\${(d.text || '').substring(0, 60)}\${(d.text || '').length > 60 ? '...' : ''}"</span></div>
+            \${orderButtons('testimonials', i, arr.length)}
+            <button class="admin-remove-btn" onclick="removeTs('\${d.id}')"><i class="bi bi-x-lg"></i></button>
         </div>
-    `).join('');
+    \`).join('');
 }
 
 document.getElementById('ts-add').addEventListener('click', async () => {
@@ -536,3 +454,6 @@ function renderAll() {
 </script>
 </body>
 </html>
+`;
+
+fs.writeFileSync('admin.html', html + newScript);
