@@ -203,9 +203,9 @@ window.moveItem = async function(collection, from, to, fnName) {
 // ============ PORTFOLIO ============
 async function renderPfList() {
     const list = document.getElementById('pf-list');
-    const snap = await db.collection('portfolio').orderBy('order', 'asc').get();
-    pfDocs = snap.docs;
-    if (snap.empty) { list.innerHTML = '<div class="admin-empty">Nessun progetto aggiunto.</div>'; return; }
+    const snap = await db.collection('portfolio').get();
+    pfDocs = snap.docs.sort((a, b) => (a.data().order ?? 9999) - (b.data().order ?? 9999));
+    if (pfDocs.length === 0) { list.innerHTML = '<div class="admin-empty">Nessun progetto aggiunto.</div>'; return; }
     list.innerHTML = pfDocs.map((doc, i) => {
         const d = doc.data();
         return `<div class="admin-item">
@@ -244,9 +244,9 @@ window.removePf = async function(id) {
 // ============ BRANDS ============
 async function renderBrList() {
     const list = document.getElementById('br-list');
-    const snap = await db.collection('brands').orderBy('order', 'asc').get();
-    brDocs = snap.docs;
-    if (snap.empty) { list.innerHTML = '<div class="admin-empty">Nessun brand aggiunto.</div>'; return; }
+    const snap = await db.collection('brands').get();
+    brDocs = snap.docs.sort((a, b) => (a.data().order ?? 9999) - (b.data().order ?? 9999));
+    if (brDocs.length === 0) { list.innerHTML = '<div class="admin-empty">Nessun brand aggiunto.</div>'; return; }
     list.innerHTML = brDocs.map((doc, i) => {
         const d = doc.data();
         return `<div class="admin-item">
@@ -285,9 +285,9 @@ window.removeBr = async function(id) {
 // ============ TESTIMONIALS ============
 async function renderTsList() {
     const list = document.getElementById('ts-list');
-    const snap = await db.collection('testimonials').orderBy('order', 'asc').get();
-    tsDocs = snap.docs;
-    if (snap.empty) { list.innerHTML = '<div class="admin-empty">Nessuna recensione aggiunta.</div>'; return; }
+    const snap = await db.collection('testimonials').get();
+    tsDocs = snap.docs.sort((a, b) => (a.data().order ?? 9999) - (b.data().order ?? 9999));
+    if (tsDocs.length === 0) { list.innerHTML = '<div class="admin-empty">Nessuna recensione aggiunta.</div>'; return; }
     list.innerHTML = tsDocs.map((doc, i) => {
         const d = doc.data();
         return `<div class="admin-item">

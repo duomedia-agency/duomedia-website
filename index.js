@@ -58,12 +58,13 @@ async function loadFirestoreData() {
         const db = firebase.firestore();
 
         // Load Portfolio
-        const portfolioSnap = await db.collection('portfolio').orderBy('order', 'asc').get();
-        if (!portfolioSnap.empty) {
+        const portfolioSnap = await db.collection('portfolio').get();
+        const portfolioDocs = portfolioSnap.docs.sort((a, b) => (a.data().order ?? 9999) - (b.data().order ?? 9999));
+        if (portfolioDocs.length > 0) {
             const grid = document.getElementById('portfolio-grid');
             if (grid) {
                 grid.innerHTML = '';
-                portfolioSnap.forEach(doc => {
+                portfolioDocs.forEach(doc => {
                     const d = doc.data();
                     const card = document.createElement('div');
                     card.className = 'portfolio-card reveal-up';
@@ -79,13 +80,13 @@ async function loadFirestoreData() {
         }
 
         // Load Brands
-        const brandsSnap = await db.collection('brands').orderBy('order', 'asc').get();
-        if (!brandsSnap.empty) {
+        const brandsSnap = await db.collection('brands').get();
+        const brandsDocs = brandsSnap.docs.sort((a, b) => (a.data().order ?? 9999) - (b.data().order ?? 9999));
+        if (brandsDocs.length > 0) {
             const track = document.getElementById('brands-track');
             if (track) {
                 track.innerHTML = '';
-                const brands = [];
-                brandsSnap.forEach(doc => brands.push(doc.data()));
+                const brands = brandsDocs.map(doc => doc.data());
                 // Original + duplicate for infinite scroll
                 [...brands, ...brands].forEach(b => {
                     const a = document.createElement('a');
@@ -100,12 +101,13 @@ async function loadFirestoreData() {
         }
 
         // Load Testimonials
-        const testimonialsSnap = await db.collection('testimonials').orderBy('order', 'asc').get();
-        if (!testimonialsSnap.empty) {
+        const testimonialsSnap = await db.collection('testimonials').get();
+        const testimonialsDocs = testimonialsSnap.docs.sort((a, b) => (a.data().order ?? 9999) - (b.data().order ?? 9999));
+        if (testimonialsDocs.length > 0) {
             const grid = document.getElementById('testimonials-grid');
             if (grid) {
                 grid.innerHTML = '';
-                testimonialsSnap.forEach(doc => {
+                testimonialsDocs.forEach(doc => {
                     const d = doc.data();
                     const card = document.createElement('div');
                     card.className = 'testimonial-card reveal-up';
