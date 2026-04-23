@@ -204,20 +204,15 @@ body.light-theme .site-header.header-scrolled { background: rgba(245,245,247,0.8
   filter: drop-shadow(0 0 20px rgba(0,150,255,0.4)) brightness(1.15);
 }
 
-/* ============ BRAND CAROUSEL ============ */
+/* ============ BRAND GRID ============ */
 .brands { padding: 2.5rem 0; overflow: hidden; }
 .brands-title { text-align: center; font-size: 1.1rem; color: var(--text-muted); margin-bottom: 1.5rem; font-weight: 500; }
-.carousel-track { display: flex; animation: carousel-scroll 20s linear infinite; width: max-content; }
-.carousel-item { flex-shrink: 0; height: 28px; width: 140px; margin: 0 2rem; opacity: 0.4; transition: opacity var(--transition); }
-.carousel-item:hover { opacity: 1; }
-.carousel-item img { height: 100%; width: 100%; object-fit: contain; }
-body.light-theme .carousel-item img { filter: invert(1) brightness(0.2); }
-body.light-theme .carousel-item { opacity: 0.5; }
-
-@keyframes carousel-scroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
+.brands-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 3rem; align-items: center; max-width: 900px; margin: 0 auto; }
+.brand-item { height: 35px; opacity: 0.5; transition: opacity var(--transition), transform var(--transition); }
+.brand-item:hover { opacity: 1; transform: scale(1.05); }
+.brand-item img { height: 100%; width: auto; object-fit: contain; }
+body.light-theme .brand-item img { filter: invert(1) brightness(0.2); }
+body.light-theme .brand-item { opacity: 0.6; }
 
 /* ============ SERVICES ============ */
 .services-grid {

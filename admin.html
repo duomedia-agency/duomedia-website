@@ -3,89 +3,125 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin — Duo Media</title>
-    <link rel="shortcut icon" href="./assets/logo/Favicon.png" type="image/png" />
+    <title>Admin — Duo Media CMS</title>
     <link rel="stylesheet" href="css/index.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css"
-          integrity="sha512-dPXYcDub/aeb08c63jRq/k6GaKccl256JQy/AnOq7CAnEZ9FzSL9wSbcZkMp4R26vBsMLFYH4kQ67/bbV8XaCQ=="
-          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" />
+    <style>
+        /* ADMIN OVERRIDES */
+        body { margin: 0; padding: 0; height: 100vh; overflow: hidden; display: flex; background: #0f1115; color: #fff; font-family: 'Inter', sans-serif; }
+        
+        /* LOGIN GATE */
+        .admin-gate { position: absolute; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; }
+        .admin-gate h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        .admin-gate p { color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.9rem; }
+        .admin-pw-input { width: 100%; max-width: 300px; padding: 0.8rem 1rem; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: #fff; font-size: 0.95rem; outline: none; margin-bottom: 1rem; }
+        .admin-pw-btn { width: 100%; max-width: 300px; padding: 0.8rem; border-radius: 8px; border: none; background: var(--primary); color: #fff; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .admin-pw-btn:hover { background: var(--primary-dark); }
+        .admin-error { color: #ff4a4a; margin-top: 1rem; display: none; font-size: 0.9rem; }
+
+        /* SPLIT SCREEN */
+        .cms-layout { display: none; width: 100%; height: 100vh; }
+        .cms-layout.visible { display: flex; }
+        
+        /* SIDEBAR */
+        .cms-sidebar { width: 450px; min-width: 400px; max-width: 50vw; background: #1a1d24; border-right: 1px solid #2d313a; display: flex; flex-direction: column; height: 100%; }
+        .cms-header { padding: 1.25rem; border-bottom: 1px solid #2d313a; display: flex; justify-content: space-between; align-items: center; }
+        .cms-header h2 { font-size: 1.1rem; margin: 0; display: flex; align-items: center; gap: 0.5rem; }
+        .cms-header h2 img { height: 24px; }
+        
+        .cms-actions { display: flex; gap: 0.5rem; }
+        .btn-logout { background: transparent; border: 1px solid #2d313a; color: #aaa; padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer; font-size: 0.8rem; transition: 0.2s; }
+        .btn-logout:hover { background: rgba(255,255,255,0.05); color: #fff; }
+        .btn-publish { background: var(--primary); border: none; color: #fff; padding: 0.4rem 1rem; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.85rem; transition: 0.2s; }
+        .btn-publish:hover { background: var(--primary-dark); }
+        .btn-publish:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* ACCORDION */
+        .cms-content { flex: 1; overflow-y: auto; padding: 1rem; }
+        .accordion-item { border: 1px solid #2d313a; border-radius: 8px; margin-bottom: 0.75rem; background: #14161a; overflow: hidden; }
+        .accordion-header { padding: 1rem; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-weight: 600; font-size: 0.95rem; user-select: none; transition: background 0.2s; }
+        .accordion-header:hover { background: rgba(255,255,255,0.02); }
+        .accordion-header i { transition: transform 0.3s; color: #888; }
+        .accordion-item.active .accordion-header i { transform: rotate(180deg); }
+        .accordion-body { display: none; padding: 1rem; border-top: 1px solid #2d313a; background: #0f1115; }
+        .accordion-item.active .accordion-body { display: block; }
+
+        /* FORMS */
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; font-size: 0.8rem; color: #aaa; margin-bottom: 0.4rem; font-weight: 500; }
+        .form-input, .form-textarea { width: 100%; padding: 0.6rem 0.8rem; background: #1a1d24; border: 1px solid #2d313a; border-radius: 6px; color: #fff; font-family: inherit; font-size: 0.9rem; outline: none; transition: border-color 0.2s; }
+        .form-input:focus, .form-textarea:focus { border-color: var(--primary); }
+        .form-textarea { min-height: 80px; resize: vertical; }
+        
+        /* LIST ITEMS (Brands, Portfolio, etc) */
+        .list-items { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
+        .list-item { display: flex; align-items: center; gap: 0.75rem; background: #1a1d24; border: 1px solid #2d313a; padding: 0.5rem; border-radius: 6px; }
+        .list-item-img { width: 40px; height: 40px; border-radius: 4px; object-fit: cover; background: #000; }
+        .list-item-info { flex: 1; min-width: 0; }
+        .list-item-title { font-size: 0.85rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .list-item-sub { font-size: 0.75rem; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .list-item-actions { display: flex; gap: 0.25rem; }
+        .btn-icon { background: transparent; border: none; color: #888; cursor: pointer; padding: 0.2rem; border-radius: 4px; transition: 0.2s; }
+        .btn-icon:hover { background: rgba(255,255,255,0.1); color: #fff; }
+        .btn-icon.danger:hover { color: #ff4a4a; }
+
+        /* ADD NEW ITEM FORM */
+        .add-form { background: #1a1d24; border: 1px dotted #444; padding: 1rem; border-radius: 6px; margin-top: 1rem; }
+        .add-form h4 { font-size: 0.85rem; margin-top: 0; margin-bottom: 1rem; color: #ccc; }
+        .file-upload { display: block; border: 1px dashed #444; text-align: center; padding: 1.5rem 1rem; border-radius: 6px; cursor: pointer; margin-bottom: 1rem; transition: 0.2s; color: #aaa; font-size: 0.85rem; }
+        .file-upload:hover { border-color: var(--primary); color: #fff; }
+        .file-upload input { display: none; }
+        .btn-add { width: 100%; padding: 0.6rem; background: rgba(255,255,255,0.05); border: 1px solid #2d313a; color: #fff; border-radius: 6px; cursor: pointer; font-size: 0.85rem; transition: 0.2s; }
+        .btn-add:hover { background: var(--primary); border-color: var(--primary); }
+
+        /* PREVIEW */
+        .cms-preview { flex: 1; background: #fff; position: relative; }
+        .cms-preview iframe { width: 100%; height: 100%; border: none; }
+        
+        /* SCROLLBAR */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
+        
+        .progress-bar-container { width: 100%; height: 4px; background: #2d313a; border-radius: 2px; overflow: hidden; margin-bottom: 1rem; display: none; }
+        .progress-bar-container.active { display: block; }
+        .progress-bar { height: 100%; background: var(--primary); width: 0%; transition: 0.3s; }
+    </style>
 </head>
 <body>
 
     <!-- ========== LOGIN GATE ========== -->
     <div class="admin-gate" id="admin-gate">
         <img src="./assets/logo/DUO_Simbolo_Bianco.png" alt="Duo Media" style="width:80px; margin-bottom:0.5rem;" class="invert-on-light" />
-        <h1>Area Riservata</h1>
+        <h1>CMS Login</h1>
         <p>Inserisci il tuo GitHub Personal Access Token.</p>
-        <input type="email" class="admin-pw-input" id="auth-email" placeholder="Email" autocomplete="email" />
-        <input type="password" class="admin-pw-input" id="auth-password" placeholder="Password" autocomplete="current-password" />
+        <input type="password" class="admin-pw-input" id="auth-password" placeholder="GitHub PAT" />
         <button class="admin-pw-btn" id="auth-btn">Accedi</button>
         <div class="admin-error" id="auth-error"></div>
     </div>
 
-    <!-- ========== LOGOUT BUTTON ========== -->
-    <button class="admin-logout-btn" id="logout-btn"><i class="bi bi-box-arrow-right"></i> Logout</button>
-
-    <!-- ========== ADMIN DASHBOARD ========== -->
-    <div class="admin-dashboard" id="admin-dashboard">
-        <h1><i class="bi bi-gear-fill" style="color:var(--primary);"></i> Pannello Admin</h1>
-
-        <!-- PORTFOLIO -->
-        <div class="admin-section">
-            <h2><i class="bi bi-images"></i> Portfolio — I Nostri Progetti</h2>
-            <div class="admin-form" id="portfolio-form">
-                <input type="text" placeholder="Titolo progetto" id="pf-title" />
-                <textarea placeholder="Descrizione breve" id="pf-desc"></textarea>
-                <div class="admin-upload-area" id="pf-upload-area">
-                    <i class="bi bi-cloud-arrow-up"></i>
-                    <span class="upload-label">Trascina un'immagine o clicca per caricare</span>
-                    <input type="file" accept="image/*" id="pf-file" />
+    <!-- ========== CMS LAYOUT ========== -->
+    <div class="cms-layout" id="cms-layout">
+        
+        <!-- SIDEBAR -->
+        <div class="cms-sidebar">
+            <div class="cms-header">
+                <h2><img src="./assets/logo/DUO_Simbolo_Bianco.png" alt=""> Admin</h2>
+                <div class="cms-actions">
+                    <button class="btn-logout" id="logout-btn">Esci</button>
+                    <button class="btn-publish" id="publish-btn">Pubblica</button>
                 </div>
-                <div class="admin-upload-progress" id="pf-progress"><div class="admin-upload-progress-bar" id="pf-progress-bar"></div></div>
-                <button class="admin-add-btn" id="pf-add"><i class="bi bi-plus-lg"></i> Aggiungi</button>
             </div>
-            <div class="admin-items" id="pf-list"></div>
+            
+            <div class="cms-content" id="accordion-container">
+                <!-- Injected via JS -->
+            </div>
         </div>
 
-        <!-- BRANDS -->
-        <div class="admin-section">
-            <h2><i class="bi bi-building"></i> Brand — Carousel Loghi</h2>
-            <div class="admin-form" id="brands-form">
-                <input type="text" placeholder="Nome brand" id="br-name" />
-                <input type="text" placeholder="Link sito web" id="br-link" />
-                <div class="admin-upload-area" id="br-upload-area">
-                    <i class="bi bi-cloud-arrow-up"></i>
-                    <span class="upload-label">Carica logo (SVG/PNG)</span>
-                    <input type="file" accept="image/*" id="br-file" />
-                </div>
-                <div class="admin-upload-progress" id="br-progress"><div class="admin-upload-progress-bar" id="br-progress-bar"></div></div>
-                <button class="admin-add-btn" id="br-add"><i class="bi bi-plus-lg"></i> Aggiungi</button>
-            </div>
-            <div class="admin-items" id="br-list"></div>
-        </div>
-
-        <!-- TESTIMONIALS -->
-        <div class="admin-section">
-            <h2><i class="bi bi-chat-quote-fill"></i> Recensioni — Dicono di noi</h2>
-            <div class="admin-form" id="testimonials-form">
-                <input type="text" placeholder="Nome" id="ts-name" />
-                <input type="text" placeholder="Ruolo (es. CEO, TechNova)" id="ts-role" />
-                <textarea placeholder="Testo recensione" id="ts-text"></textarea>
-                <div class="admin-upload-area" id="ts-upload-area">
-                    <i class="bi bi-cloud-arrow-up"></i>
-                    <span class="upload-label">Carica foto (opzionale)</span>
-                    <input type="file" accept="image/*" id="ts-file" />
-                </div>
-                <div class="admin-upload-progress" id="ts-progress"><div class="admin-upload-progress-bar" id="ts-progress-bar"></div></div>
-                <button class="admin-add-btn" id="ts-add"><i class="bi bi-plus-lg"></i> Aggiungi</button>
-            </div>
-            <div class="admin-items" id="ts-list"></div>
-        </div>
-
-        <div style="text-align:center; margin-top:2rem; padding-bottom:2rem;">
-            <p style="color:var(--text-muted); font-size:0.85rem;">
-                <i class="bi bi-github"></i> I dati vengono salvati sul repository GitHub. Le modifiche al sito pubblico potrebbero richiedere 1-2 minuti.
-            </p>
+        <!-- PREVIEW -->
+        <div class="cms-preview">
+            <iframe src="index.html" id="preview-frame"></iframe>
         </div>
     </div>
 
@@ -97,30 +133,29 @@ const REPO_NAME = 'duomedia-website';
 const BRANCH = 'main';
 
 let githubToken = localStorage.getItem('github_token') || '';
-let siteData = { portfolio: [], brands: [], testimonials: [] };
+let siteData = {};
 let dataFileSha = '';
 
-// ============ ELEMENTS ============
+// ============ DOM ELEMENTS ============
 const gate = document.getElementById('admin-gate');
-const dashboard = document.getElementById('admin-dashboard');
-const logoutBtn = document.getElementById('logout-btn');
-const authError = document.getElementById('auth-error');
-
-// Replace login inputs
-document.getElementById('auth-email').style.display = 'none';
+const layout = document.getElementById('cms-layout');
 const pwInput = document.getElementById('auth-password');
-pwInput.placeholder = "GitHub Personal Access Token";
-pwInput.type = "password";
+const authBtn = document.getElementById('auth-btn');
+const authError = document.getElementById('auth-error');
+const logoutBtn = document.getElementById('logout-btn');
+const publishBtn = document.getElementById('publish-btn');
+const accordionContainer = document.getElementById('accordion-container');
+const previewFrame = document.getElementById('preview-frame');
 
 // ============ AUTH ============
-document.getElementById('auth-btn').addEventListener('click', doLogin);
+authBtn.addEventListener('click', doLogin);
 pwInput.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
 
 async function doLogin() {
     const token = pwInput.value.trim();
     if (!token) return;
     
-    // Verify token by trying to fetch the repository
+    authBtn.textContent = 'Verifica...';
     try {
         const res = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`, {
             headers: { 'Authorization': `token ${token}` }
@@ -130,52 +165,47 @@ async function doLogin() {
         
         githubToken = token;
         localStorage.setItem('github_token', token);
-        showDashboard();
+        await initCMS();
     } catch (err) {
         authError.textContent = err.message;
         authError.style.display = 'block';
         setTimeout(() => { authError.style.display = 'none'; }, 3000);
     }
+    authBtn.textContent = 'Accedi';
 }
 
 logoutBtn.addEventListener('click', () => {
     localStorage.removeItem('github_token');
     githubToken = '';
-    showGate();
+    gate.style.display = 'flex';
+    layout.classList.remove('visible');
+    pwInput.value = '';
 });
 
-function showGate() {
-    gate.style.display = '';
-    dashboard.classList.remove('visible');
-    logoutBtn.classList.remove('visible');
-    pwInput.value = '';
-}
-
-async function showDashboard() {
-    gate.style.display = 'none';
-    dashboard.classList.add('visible');
-    logoutBtn.classList.add('visible');
-    await loadDataFromGitHub();
-    renderAll();
-}
-
-// Auto-login if token exists
+// Auto-login
 if (githubToken) {
-    showDashboard();
+    initCMS();
+}
+
+async function initCMS() {
+    gate.style.display = 'none';
+    layout.classList.add('visible');
+    await loadDataFromGitHub();
+    renderSidebar();
 }
 
 // ============ GITHUB API HELPERS ============
 async function fetchWithToken(url, options = {}) {
-    const defaultHeaders = {
+    options.headers = {
         'Authorization': `token ${githubToken}`,
         'Accept': 'application/vnd.github.v3+json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        ...(options.headers || {})
     };
-    options.headers = { ...defaultHeaders, ...options.headers };
     const res = await fetch(url, options);
     if (!res.ok) {
         if (res.status === 401) {
-            alert("Token scaduto o non valido. Fai il login di nuovo.");
+            alert("Token scaduto o non valido.");
             logoutBtn.click();
         }
         throw new Error(`GitHub API Error: ${res.statusText}`);
@@ -183,86 +213,67 @@ async function fetchWithToken(url, options = {}) {
     return res.json();
 }
 
-// Convert string to base64 keeping unicode (utf-8)
 function b64EncodeUnicode(str) {
     return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
-        function toSolidBytes(match, p1) {
-            return String.fromCharCode('0x' + p1);
-    }));
+        function toSolidBytes(match, p1) { return String.fromCharCode('0x' + p1); }));
 }
 
 async function loadDataFromGitHub() {
     try {
-        // Fetch the file from GitHub API to get the content and SHA
         const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/data.json?ref=${BRANCH}`;
-        
         const response = await fetch(url, { headers: { 'Authorization': `token ${githubToken}` } });
         
         if (response.status === 404) {
-            // File doesn't exist yet, we will create it on first save
-            siteData = { portfolio: [], brands: [], testimonials: [] };
+            siteData = {};
             dataFileSha = '';
             return;
         }
-        
         if (!response.ok) throw new Error('Impossibile caricare data.json');
         
         const fileData = await response.json();
         dataFileSha = fileData.sha;
         
-        // Content is base64 encoded
         const jsonString = decodeURIComponent(atob(fileData.content).split('').map(function(c) {
             return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
         }).join(''));
         
         siteData = JSON.parse(jsonString);
-        
-        // Ensure arrays exist
-        if (!siteData.portfolio) siteData.portfolio = [];
-        if (!siteData.brands) siteData.brands = [];
-        if (!siteData.testimonials) siteData.testimonials = [];
-        
     } catch (err) {
-        console.error("Error loading data:", err);
         alert("Errore nel caricamento dei dati: " + err.message);
     }
 }
 
-async function saveDataToGitHub() {
-    const jsonString = JSON.stringify(siteData, null, 2);
-    const contentBase64 = b64EncodeUnicode(jsonString);
-    
-    const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/data.json`;
-    
-    const body = {
-        message: 'Aggiornamento dati (via admin panel)',
-        content: contentBase64,
-        branch: BRANCH
-    };
-    
-    if (dataFileSha) {
-        body.sha = dataFileSha;
+publishBtn.addEventListener('click', async () => {
+    publishBtn.disabled = true;
+    publishBtn.textContent = 'Salvataggio...';
+    try {
+        const jsonString = JSON.stringify(siteData, null, 2);
+        const body = {
+            message: 'CMS Update',
+            content: b64EncodeUnicode(jsonString),
+            branch: BRANCH
+        };
+        if (dataFileSha) body.sha = dataFileSha;
+        
+        const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/data.json`;
+        const res = await fetchWithToken(url, { method: 'PUT', body: JSON.stringify(body) });
+        dataFileSha = res.content.sha;
+        
+        publishBtn.textContent = 'Pubblicato!';
+        setTimeout(() => { publishBtn.textContent = 'Pubblica'; publishBtn.disabled = false; }, 2000);
+    } catch (err) {
+        alert('Errore salvataggio: ' + err.message);
+        publishBtn.textContent = 'Riprova';
+        publishBtn.disabled = false;
     }
-    
-    const res = await fetchWithToken(url, {
-        method: 'PUT',
-        body: JSON.stringify(body)
-    });
-    
-    // Update SHA for future saves
-    dataFileSha = res.content.sha;
-}
+});
 
-// Convert file to base64
+// ============ FILE UPLOAD ============
 function getBase64(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
-        reader.onload = () => {
-            // Remove the data:image/jpeg;base64, prefix
-            const base64 = reader.result.split(',')[1];
-            resolve(base64);
-        };
+        reader.onload = () => resolve(reader.result.split(',')[1]);
         reader.onerror = error => reject(error);
     });
 }
@@ -270,269 +281,283 @@ function getBase64(file) {
 async function uploadFileToGitHub(file, folder, progressBar) {
     const fileName = Date.now() + '_' + file.name.replace(/[^a-zA-Z0-9._-]/g, '');
     const path = `assets/uploads/${folder}/${fileName}`;
-    
     if (progressBar) progressBar.parentElement.classList.add('active');
     
-    const base64Content = await getBase64(file);
-    
-    const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`;
-    
     try {
+        const base64Content = await getBase64(file);
         if (progressBar) progressBar.style.width = '50%';
         
+        const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`;
         await fetchWithToken(url, {
             method: 'PUT',
-            body: JSON.stringify({
-                message: `Upload immagine ${fileName}`,
-                content: base64Content,
-                branch: BRANCH
-            })
+            body: JSON.stringify({ message: `Upload ${fileName}`, content: base64Content, branch: BRANCH })
         });
         
         if (progressBar) {
             progressBar.style.width = '100%';
-            setTimeout(() => { 
-                progressBar.parentElement.classList.remove('active'); 
-                progressBar.style.width = '0%'; 
-            }, 600);
+            setTimeout(() => { progressBar.parentElement.classList.remove('active'); progressBar.style.width = '0%'; }, 600);
         }
-        
-        // Return the GitHub Pages URL for the image
         return `./${path}`;
-        
     } catch (err) {
         if (progressBar) progressBar.parentElement.classList.remove('active');
         throw err;
     }
 }
 
-document.querySelectorAll('.admin-upload-area input[type="file"]').forEach(input => {
-    input.addEventListener('change', () => {
-        const label = input.closest('.admin-upload-area').querySelector('.upload-label');
-        if (input.files.length > 0) label.textContent = input.files[0].name;
-    });
-});
-
-// ============ UTILS ============
-function generateId() {
-    return Math.random().toString(36).substr(2, 9);
+// ============ REAL-TIME UPDATE ============
+function triggerPreviewUpdate() {
+    if (previewFrame.contentWindow) {
+        previewFrame.contentWindow.postMessage({ type: 'UPDATE_CONTENT', data: siteData }, '*');
+    }
 }
 
-// ============ REORDER HELPER ============
-async function moveItem(collection, index, direction) {
-    const arr = siteData[collection];
+// Update text in JSON
+function updateText(path, value) {
+    const parts = path.split('.');
+    let obj = siteData;
+    for (let i = 0; i < parts.length - 1; i++) {
+        if (!obj[parts[i]]) obj[parts[i]] = {};
+        obj = obj[parts[i]];
+    }
+    obj[parts[parts.length - 1]] = value;
+    triggerPreviewUpdate();
+}
+
+// Generate unique ID
+function generateId() { return Math.random().toString(36).substr(2, 9); }
+
+// Move item in array
+window.moveItem = function(collection, id, direction) {
+    const arr = siteData[collection]?.items || [];
+    const index = arr.findIndex(x => x.id === id);
+    if (index < 0) return;
     const newIndex = index + direction;
-    
     if (newIndex < 0 || newIndex >= arr.length) return;
     
-    // Swap
     const temp = arr[index];
     arr[index] = arr[newIndex];
     arr[newIndex] = temp;
-    
-    // Update order properties
     arr.forEach((item, i) => item.order = i);
     
-    renderAll();
-    await saveDataToGitHub();
+    triggerPreviewUpdate();
+    renderSidebar(); // Re-render to show updated order
 }
 
-function orderButtons(collection, index, total) {
-    return `<div class="admin-item-actions">
-        <button class="admin-order-btn" onclick="moveItem('${collection}', ${index}, -1)" ${index === 0 ? 'disabled' : ''}><i class="bi bi-chevron-up"></i></button>
-        <button class="admin-order-btn" onclick="moveItem('${collection}', ${index}, 1)" ${index === total - 1 ? 'disabled' : ''}><i class="bi bi-chevron-down"></i></button>
-    </div>`;
+window.removeItem = function(collection, id) {
+    if (!confirm('Eliminare questo elemento?')) return;
+    siteData[collection].items = siteData[collection].items.filter(x => x.id !== id);
+    triggerPreviewUpdate();
+    renderSidebar();
 }
 
-// ============ PORTFOLIO ============
-function renderPfList() {
-    const list = document.getElementById('pf-list');
-    const arr = siteData.portfolio.sort((a, b) => (a.order ?? 9999) - (b.order ?? 9999));
-    
-    if (arr.length === 0) { list.innerHTML = '<div class="admin-empty">Nessun progetto aggiunto.</div>'; return; }
-    
-    list.innerHTML = arr.map((d, i) => `
-        <div class="admin-item">
-            <img src="${d.image}" alt="" class="admin-item-img" onerror="this.style.display='none'" />
-            <div class="admin-item-info"><strong>${d.title}</strong><span>${d.description || ''}</span></div>
-            ${orderButtons('portfolio', i, arr.length)}
-            <button class="admin-remove-btn" onclick="removePf('${d.id}')"><i class="bi bi-x-lg"></i></button>
+// ============ UI RENDERING ============
+
+function createInput(label, path, isTextarea = false) {
+    // Get value safely
+    const val = path.split('.').reduce((o, i) => o ? o[i] : '', siteData) || '';
+    const tag = isTextarea ? 'textarea' : 'input';
+    const className = isTextarea ? 'form-textarea' : 'form-input';
+    return `
+        <div class="form-group">
+            <label>${label}</label>
+            <${tag} class="${className}" oninput="updateText('${path}', this.value)">${isTextarea ? val : ''}</${tag}>
         </div>
-    `).join('');
+    `.replace('></input>', ` value="${val.replace(/"/g, '&quot;')}" />`);
 }
 
-document.getElementById('pf-add').addEventListener('click', async () => {
-    const title = document.getElementById('pf-title').value.trim();
-    const desc = document.getElementById('pf-desc').value.trim();
-    const file = document.getElementById('pf-file').files[0];
-    
-    if (!title || !file) { alert('Inserisci titolo e immagine.'); return; }
-    
-    const btn = document.getElementById('pf-add');
-    btn.disabled = true; btn.textContent = 'Caricamento...';
-    
-    try {
-        const imageUrl = await uploadFileToGitHub(file, 'portfolio', document.getElementById('pf-progress-bar'));
-        
-        siteData.portfolio.push({
-            id: generateId(),
-            title,
-            description: desc,
-            image: imageUrl,
-            order: siteData.portfolio.length
-        });
-        
-        await saveDataToGitHub();
-        
-        document.getElementById('pf-title').value = ''; 
-        document.getElementById('pf-desc').value = ''; 
-        document.getElementById('pf-file').value = '';
-        document.querySelector('#pf-upload-area .upload-label').textContent = "Trascina un'immagine o clicca per caricare";
-        renderPfList();
-    } catch (err) { 
-        alert('Errore: ' + err.message); 
-    }
-    
-    btn.disabled = false; btn.innerHTML = '<i class="bi bi-plus-lg"></i> Aggiungi';
-});
-
-window.removePf = async function(id) {
-    if (!confirm('Rimuovere questo progetto?')) return;
-    siteData.portfolio = siteData.portfolio.filter(item => item.id !== id);
-    renderPfList();
-    await saveDataToGitHub();
-};
-
-// ============ BRANDS ============
-function renderBrList() {
-    const list = document.getElementById('br-list');
-    const arr = siteData.brands.sort((a, b) => (a.order ?? 9999) - (b.order ?? 9999));
-    
-    if (arr.length === 0) { list.innerHTML = '<div class="admin-empty">Nessun brand aggiunto.</div>'; return; }
-    
-    list.innerHTML = arr.map((d, i) => `
-        <div class="admin-item">
-            <img src="${d.logo}" alt="" class="admin-item-img" style="background:#222;padding:4px;" onerror="this.style.display='none'" />
-            <div class="admin-item-info"><strong>${d.name}</strong><span>${d.link || 'Nessun link'}</span></div>
-            ${orderButtons('brands', i, arr.length)}
-            <button class="admin-remove-btn" onclick="removeBr('${d.id}')"><i class="bi bi-x-lg"></i></button>
+function renderAccordionItem(title, icon, contentHtml, id) {
+    return `
+        <div class="accordion-item" id="acc-${id}">
+            <div class="accordion-header" onclick="this.parentElement.classList.toggle('active')">
+                <span><i class="bi ${icon}"></i> ${title}</span>
+                <i class="bi bi-chevron-down"></i>
+            </div>
+            <div class="accordion-body">
+                ${contentHtml}
+            </div>
         </div>
-    `).join('');
+    `;
 }
 
-document.getElementById('br-add').addEventListener('click', async () => {
-    const name = document.getElementById('br-name').value.trim();
-    const link = document.getElementById('br-link').value.trim();
-    const file = document.getElementById('br-file').files[0];
+function renderSidebar() {
+    let html = '';
     
-    if (!name || !file) { alert('Inserisci nome e logo.'); return; }
+    // 1. HERO
+    let heroHtml = createInput('Titolo (Riga 1)', 'hero.titleLine1');
+    heroHtml += createInput('Titolo (Riga 2)', 'hero.titleLine2');
+    heroHtml += createInput('Sottotitolo', 'hero.subtitle', true);
+    html += renderAccordionItem('Hero Section', 'bi-stars', heroHtml, 'hero');
     
-    const btn = document.getElementById('br-add');
+    // 2. BRANDS
+    let brandsHtml = createInput('Titolo Sezione', 'brands.title');
+    brandsHtml += '<div class="list-items">';
+    const brandsArr = (siteData.brands?.items || []).sort((a,b)=>(a.order??99)- (b.order??99));
+    brandsArr.forEach((b, i) => {
+        brandsHtml += `
+            <div class="list-item">
+                <img src="${b.logo}" class="list-item-img" style="background:#f1f1f1;" />
+                <div class="list-item-info">
+                    <div class="list-item-title">${b.name}</div>
+                </div>
+                <div class="list-item-actions">
+                    <button class="btn-icon" onclick="moveItem('brands','${b.id}',-1)" ${i===0?'disabled':''}><i class="bi bi-arrow-up"></i></button>
+                    <button class="btn-icon" onclick="moveItem('brands','${b.id}',1)" ${i===brandsArr.length-1?'disabled':''}><i class="bi bi-arrow-down"></i></button>
+                    <button class="btn-icon danger" onclick="removeItem('brands','${b.id}')"><i class="bi bi-trash"></i></button>
+                </div>
+            </div>`;
+    });
+    brandsHtml += `</div>
+        <div class="add-form">
+            <h4>Aggiungi Brand</h4>
+            <div class="progress-bar-container"><div class="progress-bar"></div></div>
+            <input type="text" id="add-br-name" class="form-input" placeholder="Nome Brand" style="margin-bottom:0.5rem;" />
+            <input type="text" id="add-br-link" class="form-input" placeholder="Link (opzionale)" style="margin-bottom:0.5rem;" />
+            <label class="file-upload"><input type="file" id="add-br-file" accept="image/*" onchange="this.parentElement.querySelector('span').textContent=this.files[0].name" /> <span>Carica Logo</span></label>
+            <button class="btn-add" onclick="addBrand(this)"><i class="bi bi-plus"></i> Aggiungi</button>
+        </div>`;
+    html += renderAccordionItem('Brand', 'bi-bag', brandsHtml, 'brands');
+    
+    // 3. PORTFOLIO
+    let pfHtml = createInput('Titolo Sezione', 'portfolio.title');
+    pfHtml += createInput('Sottotitolo', 'portfolio.subtitle');
+    pfHtml += '<div class="list-items">';
+    const pfArr = (siteData.portfolio?.items || []).sort((a,b)=>(a.order??99)- (b.order??99));
+    pfArr.forEach((p, i) => {
+        pfHtml += `
+            <div class="list-item">
+                <img src="${p.image}" class="list-item-img" />
+                <div class="list-item-info">
+                    <div class="list-item-title">${p.title}</div>
+                    <div class="list-item-sub">${p.description}</div>
+                </div>
+                <div class="list-item-actions">
+                    <button class="btn-icon" onclick="moveItem('portfolio','${p.id}',-1)" ${i===0?'disabled':''}><i class="bi bi-arrow-up"></i></button>
+                    <button class="btn-icon" onclick="moveItem('portfolio','${p.id}',1)" ${i===pfArr.length-1?'disabled':''}><i class="bi bi-arrow-down"></i></button>
+                    <button class="btn-icon danger" onclick="removeItem('portfolio','${p.id}')"><i class="bi bi-trash"></i></button>
+                </div>
+            </div>`;
+    });
+    pfHtml += `</div>
+        <div class="add-form">
+            <h4>Aggiungi Progetto</h4>
+            <div class="progress-bar-container"><div class="progress-bar"></div></div>
+            <input type="text" id="add-pf-title" class="form-input" placeholder="Titolo" style="margin-bottom:0.5rem;" />
+            <input type="text" id="add-pf-desc" class="form-input" placeholder="Descrizione" style="margin-bottom:0.5rem;" />
+            <label class="file-upload"><input type="file" id="add-pf-file" accept="image/*" onchange="this.parentElement.querySelector('span').textContent=this.files[0].name" /> <span>Carica Immagine</span></label>
+            <button class="btn-add" onclick="addPortfolio(this)"><i class="bi bi-plus"></i> Aggiungi</button>
+        </div>`;
+    html += renderAccordionItem('Portfolio', 'bi-images', pfHtml, 'portfolio');
+
+    // 4. TESTIMONIALS
+    let tsHtml = createInput('Titolo Sezione', 'testimonials.title');
+    tsHtml += '<div class="list-items">';
+    const tsArr = (siteData.testimonials?.items || []).sort((a,b)=>(a.order??99)- (b.order??99));
+    tsArr.forEach((t, i) => {
+        tsHtml += `
+            <div class="list-item">
+                <img src="${t.photo || './assets/images/people/man.jpg'}" class="list-item-img" style="border-radius:50%;" />
+                <div class="list-item-info">
+                    <div class="list-item-title">${t.name}</div>
+                    <div class="list-item-sub">${t.text}</div>
+                </div>
+                <div class="list-item-actions">
+                    <button class="btn-icon" onclick="moveItem('testimonials','${t.id}',-1)" ${i===0?'disabled':''}><i class="bi bi-arrow-up"></i></button>
+                    <button class="btn-icon" onclick="moveItem('testimonials','${t.id}',1)" ${i===tsArr.length-1?'disabled':''}><i class="bi bi-arrow-down"></i></button>
+                    <button class="btn-icon danger" onclick="removeItem('testimonials','${t.id}')"><i class="bi bi-trash"></i></button>
+                </div>
+            </div>`;
+    });
+    tsHtml += `</div>
+        <div class="add-form">
+            <h4>Aggiungi Recensione</h4>
+            <div class="progress-bar-container"><div class="progress-bar"></div></div>
+            <input type="text" id="add-ts-name" class="form-input" placeholder="Nome" style="margin-bottom:0.5rem;" />
+            <input type="text" id="add-ts-role" class="form-input" placeholder="Ruolo/Azienda" style="margin-bottom:0.5rem;" />
+            <textarea id="add-ts-text" class="form-textarea" placeholder="Testo recensione..." style="margin-bottom:0.5rem;"></textarea>
+            <label class="file-upload"><input type="file" id="add-ts-file" accept="image/*" onchange="this.parentElement.querySelector('span').textContent=this.files[0].name" /> <span>Carica Foto (Opzionale)</span></label>
+            <button class="btn-add" onclick="addTestimonial(this)"><i class="bi bi-plus"></i> Aggiungi</button>
+        </div>`;
+    html += renderAccordionItem('Recensioni', 'bi-chat-quote', tsHtml, 'testimonials');
+
+    // 5. CONTACT / FOOTER
+    let contactHtml = createInput('Titolo Contatti', 'contact.title');
+    contactHtml += createInput('Sottotitolo Contatti', 'contact.subtitle');
+    contactHtml += createInput('Email di ricezione', 'contact.email');
+    contactHtml += createInput('Link Instagram', 'contact.igLink');
+    contactHtml += createInput('Nome Utente IG', 'contact.igHandle');
+    contactHtml += '<hr style="border-color:#2d313a; margin: 1rem 0;" />';
+    contactHtml += createInput('Nome Azienda Footer', 'footer.companyName');
+    contactHtml += createInput('Partita IVA', 'footer.piva');
+    contactHtml += createInput('Città/Sede', 'footer.location');
+    html += renderAccordionItem('Contatti & Footer', 'bi-envelope', contactHtml, 'contact');
+
+    accordionContainer.innerHTML = html;
+}
+
+// ============ ADD ITEM FUNCTIONS ============
+window.addBrand = async function(btn) {
+    const parent = btn.parentElement;
+    const name = parent.querySelector('#add-br-name').value;
+    const link = parent.querySelector('#add-br-link').value;
+    const file = parent.querySelector('#add-br-file').files[0];
+    
+    if (!name || !file) return alert('Inserisci nome e logo');
+    
     btn.disabled = true; btn.textContent = 'Caricamento...';
-    
     try {
-        const logoUrl = await uploadFileToGitHub(file, 'brands', document.getElementById('br-progress-bar'));
+        const logo = await uploadFileToGitHub(file, 'brands', parent.querySelector('.progress-bar'));
+        if (!siteData.brands) siteData.brands = { items: [] };
+        if (!siteData.brands.items) siteData.brands.items = [];
+        siteData.brands.items.push({ id: generateId(), name, link, logo, order: siteData.brands.items.length });
         
-        siteData.brands.push({
-            id: generateId(),
-            name,
-            logo: logoUrl,
-            link: link || '#',
-            order: siteData.brands.length
-        });
-        
-        await saveDataToGitHub();
-        
-        document.getElementById('br-name').value = ''; 
-        document.getElementById('br-link').value = ''; 
-        document.getElementById('br-file').value = '';
-        document.querySelector('#br-upload-area .upload-label').textContent = 'Carica logo (SVG/PNG)';
-        renderBrList();
-    } catch (err) { 
-        alert('Errore: ' + err.message); 
-    }
-    
-    btn.disabled = false; btn.innerHTML = '<i class="bi bi-plus-lg"></i> Aggiungi';
-});
-
-window.removeBr = async function(id) {
-    if (!confirm('Rimuovere questo brand?')) return;
-    siteData.brands = siteData.brands.filter(item => item.id !== id);
-    renderBrList();
-    await saveDataToGitHub();
-};
-
-// ============ TESTIMONIALS ============
-function renderTsList() {
-    const list = document.getElementById('ts-list');
-    const arr = siteData.testimonials.sort((a, b) => (a.order ?? 9999) - (b.order ?? 9999));
-    
-    if (arr.length === 0) { list.innerHTML = '<div class="admin-empty">Nessuna recensione aggiunta.</div>'; return; }
-    
-    list.innerHTML = arr.map((d, i) => `
-        <div class="admin-item">
-            <img src="${d.photo || './assets/images/people/man.jpg'}" alt="" class="admin-item-img" style="border-radius:50%;" onerror="this.style.display='none'" />
-            <div class="admin-item-info"><strong>${d.name}</strong><span>${d.role || ''} — "${(d.text || '').substring(0, 60)}${(d.text || '').length > 60 ? '...' : ''}"</span></div>
-            ${orderButtons('testimonials', i, arr.length)}
-            <button class="admin-remove-btn" onclick="removeTs('${d.id}')"><i class="bi bi-x-lg"></i></button>
-        </div>
-    `).join('');
+        triggerPreviewUpdate();
+        renderSidebar();
+    } catch(e) { alert(e.message); btn.disabled = false; btn.textContent = 'Riprova'; }
 }
 
-document.getElementById('ts-add').addEventListener('click', async () => {
-    const name = document.getElementById('ts-name').value.trim();
-    const role = document.getElementById('ts-role').value.trim();
-    const text = document.getElementById('ts-text').value.trim();
-    const file = document.getElementById('ts-file').files[0];
+window.addPortfolio = async function(btn) {
+    const parent = btn.parentElement;
+    const title = parent.querySelector('#add-pf-title').value;
+    const desc = parent.querySelector('#add-pf-desc').value;
+    const file = parent.querySelector('#add-pf-file').files[0];
     
-    if (!name || !text) { alert('Inserisci nome e testo.'); return; }
+    if (!title || !file) return alert('Inserisci titolo e immagine');
     
-    const btn = document.getElementById('ts-add');
     btn.disabled = true; btn.textContent = 'Caricamento...';
-    
     try {
-        let photoUrl = '';
-        if (file) {
-            photoUrl = await uploadFileToGitHub(file, 'testimonials', document.getElementById('ts-progress-bar'));
-        }
+        const image = await uploadFileToGitHub(file, 'portfolio', parent.querySelector('.progress-bar'));
+        if (!siteData.portfolio) siteData.portfolio = { items: [] };
+        if (!siteData.portfolio.items) siteData.portfolio.items = [];
+        siteData.portfolio.items.push({ id: generateId(), title, description: desc, image, order: siteData.portfolio.items.length });
         
-        siteData.testimonials.push({
-            id: generateId(),
-            name,
-            role,
-            text,
-            photo: photoUrl,
-            order: siteData.testimonials.length
-        });
-        
-        await saveDataToGitHub();
-        
-        document.getElementById('ts-name').value = ''; 
-        document.getElementById('ts-role').value = ''; 
-        document.getElementById('ts-text').value = ''; 
-        document.getElementById('ts-file').value = '';
-        document.querySelector('#ts-upload-area .upload-label').textContent = 'Carica foto (opzionale)';
-        renderTsList();
-    } catch (err) { 
-        alert('Errore: ' + err.message); 
-    }
-    
-    btn.disabled = false; btn.innerHTML = '<i class="bi bi-plus-lg"></i> Aggiungi';
-});
-
-window.removeTs = async function(id) {
-    if (!confirm('Rimuovere questa recensione?')) return;
-    siteData.testimonials = siteData.testimonials.filter(item => item.id !== id);
-    renderTsList();
-    await saveDataToGitHub();
-};
-
-// ============ LOAD ALL ============
-function renderAll() { 
-    renderPfList(); 
-    renderBrList(); 
-    renderTsList(); 
+        triggerPreviewUpdate();
+        renderSidebar();
+    } catch(e) { alert(e.message); btn.disabled = false; btn.textContent = 'Riprova'; }
 }
+
+window.addTestimonial = async function(btn) {
+    const parent = btn.parentElement;
+    const name = parent.querySelector('#add-ts-name').value;
+    const role = parent.querySelector('#add-ts-role').value;
+    const text = parent.querySelector('#add-ts-text').value;
+    const file = parent.querySelector('#add-ts-file').files[0];
+    
+    if (!name || !text) return alert('Inserisci nome e testo');
+    
+    btn.disabled = true; btn.textContent = 'Caricamento...';
+    try {
+        let photo = '';
+        if (file) photo = await uploadFileToGitHub(file, 'testimonials', parent.querySelector('.progress-bar'));
+        
+        if (!siteData.testimonials) siteData.testimonials = { items: [] };
+        if (!siteData.testimonials.items) siteData.testimonials.items = [];
+        siteData.testimonials.items.push({ id: generateId(), name, role, text, photo, order: siteData.testimonials.items.length });
+        
+        triggerPreviewUpdate();
+        renderSidebar();
+    } catch(e) { alert(e.message); btn.disabled = false; btn.textContent = 'Riprova'; }
+}
+
 </script>
 </body>
 </html>

@@ -72,11 +72,11 @@
         </div>
 
         <h1 class="hero-title reveal-up">
-            <span class="gradient-text">Raccontiamo la tua storia</span><br />
-            <span class="gradient-text">trasformando visioni in realtà</span>
+            <span class="gradient-text" id="hero-title-1">Raccontiamo la tua storia</span><br />
+            <span class="gradient-text" id="hero-title-2">trasformando visioni in realtà</span>
         </h1>
 
-        <p class="hero-subtitle reveal-up">
+        <p class="hero-subtitle reveal-up" id="hero-subtitle">
             Gestiamo i tuoi social, organizziamo eventi e creiamo grafiche…
             e lo facciamo in due, ma con il doppio dell'energia!
         </p>
@@ -90,18 +90,12 @@
         </div>
     </section>
 
-    <!-- ========== BRAND CAROUSEL ========== -->
+    <!-- ========== BRANDS ========== -->
     <section class="brands section">
-        <h2 class="brands-title reveal-up">I brand che seguiamo</h2>
-        <div style="overflow:hidden;">
-            <div class="carousel-track" id="brands-track">
-                <a href="https://www.loomae.it" class="carousel-item"><img src="./assets/images/brand-logos/loomae-white.svg" alt="Loomae" /></a>
-                <a href="https://www.loomae.it" class="carousel-item"><img src="./assets/images/brand-logos/loomae-white.svg" alt="Loomae" /></a>
-                <a href="https://www.loomae.it" class="carousel-item"><img src="./assets/images/brand-logos/loomae-white.svg" alt="Loomae" /></a>
-                <!-- Duplicate set for infinite scroll -->
-                <a href="https://www.loomae.it" class="carousel-item"><img src="./assets/images/brand-logos/loomae-white.svg" alt="Loomae" /></a>
-                <a href="https://www.loomae.it" class="carousel-item"><img src="./assets/images/brand-logos/loomae-white.svg" alt="Loomae" /></a>
-                <a href="https://www.loomae.it" class="carousel-item"><img src="./assets/images/brand-logos/loomae-white.svg" alt="Loomae" /></a>
+        <h2 class="brands-title reveal-up" id="brands-title">I brand che seguiamo</h2>
+        <div class="container">
+            <div class="brands-grid" id="brands-grid">
+                <!-- Injected via index.js -->
             </div>
         </div>
     </section>
@@ -109,39 +103,11 @@
     <!-- ========== SERVIZI ========== -->
     <section class="section" id="servizi">
         <div class="container">
-            <h2 class="section-title reveal-up">Cosa offriamo?</h2>
-            <p class="section-subtitle reveal-up">Tre anime, un solo obiettivo: far crescere il tuo brand.</p>
+            <h2 class="section-title reveal-up" id="services-title">Cosa offriamo?</h2>
+            <p class="section-subtitle reveal-up" id="services-subtitle">Tre anime, un solo obiettivo: far crescere il tuo brand.</p>
 
-            <div class="services-grid">
-                <div class="service-card reveal-up">
-                    <div class="service-icon-area">
-                        <i class="bi bi-phone-fill"></i>
-                    </div>
-                    <div class="service-content">
-                        <h3>Social Media Management</h3>
-                        <p>Gestione completa dei canali social, creazione contenuti creativi e strategie mirate per far crescere la tua community.</p>
-                    </div>
-                </div>
-
-                <div class="service-card reveal-up">
-                    <div class="service-icon-area">
-                        <i class="bi bi-calendar-event-fill"></i>
-                    </div>
-                    <div class="service-content">
-                        <h3>Organizzazione Eventi</h3>
-                        <p>Progettiamo e realizziamo eventi emozionanti, curando ogni singolo dettaglio per farti ricordare nel tempo.</p>
-                    </div>
-                </div>
-
-                <div class="service-card reveal-up">
-                    <div class="service-icon-area">
-                        <i class="bi bi-bezier2"></i>
-                    </div>
-                    <div class="service-content">
-                        <h3>Graphic Design</h3>
-                        <p>Creazione di grafiche di impatto, loghi e brand identity unici per distinguerti nel mercato moderno.</p>
-                    </div>
-                </div>
+            <div class="services-grid" id="services-grid">
+                <!-- Injected via index.js -->
             </div>
         </div>
     </section>
@@ -154,16 +120,9 @@
                     <img src="./assets/images/home/dash.png" alt="Il nostro team" />
                 </div>
                 <div class="why-us-text">
-                    <h2>Un unico team,<br />mille soluzioni.</h2>
-
-                    <div class="why-point">
-                        <h4><i class="bi bi-star-fill"></i> Approccio Sartoriale</h4>
-                        <p>Ogni brand ha una storia unica. Noi ascoltiamo la tua e creiamo una strategia di comunicazione tagliata perfettamente su misura.</p>
-                    </div>
-
-                    <div class="why-point">
-                        <h4><i class="bi bi-lightning-fill"></i> Dinamismo e Risultati</h4>
-                        <p>Siamo due professionisti agili e veloci. Niente burocrazia da grande agenzia, solo creatività pura e risultati misurabili.</p>
+                    <h2 id="whyus-title">Un unico team,<br />mille soluzioni.</h2>
+                    <div id="whyus-points">
+                        <!-- Injected via index.js -->
                     </div>
                 </div>
             </div>
@@ -173,42 +132,11 @@
     <!-- ========== TESTIMONIAL ========== -->
     <section class="section" id="clienti">
         <div class="container">
-            <h2 class="section-title reveal-up">Dicono di noi</h2>
-            <p class="section-subtitle reveal-up">La soddisfazione dei nostri clienti è il nostro miglior biglietto da visita.</p>
+            <h2 class="section-title reveal-up" id="testimonials-title">Dicono di noi</h2>
+            <p class="section-subtitle reveal-up" id="testimonials-subtitle">La soddisfazione dei nostri clienti è il nostro miglior biglietto da visita.</p>
 
             <div class="testimonials-grid" id="testimonials-grid">
-                <div class="testimonial-card reveal-up">
-                    <p>"Duo Media ha rivoluzionato il nostro modo di comunicare. Creativi, veloci e sempre pronti a trovare la soluzione giusta per noi. Grazie ragazzi!"</p>
-                    <div class="testimonial-author">
-                        <div class="testimonial-avatar"><img src="./assets/images/people/women.jpg" alt="Sara L." /></div>
-                        <div>
-                            <div class="testimonial-name">Sara L.</div>
-                            <div class="testimonial-role">Owner, Ristorante La Baia</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="testimonial-card reveal-up">
-                    <p>"L'organizzazione del nostro evento aziendale è stata impeccabile. Hanno curato ogni minimo dettaglio, superando le nostre aspettative."</p>
-                    <div class="testimonial-author">
-                        <div class="testimonial-avatar"><img src="./assets/images/people/man.jpg" alt="Marco V." /></div>
-                        <div>
-                            <div class="testimonial-name">Marco V.</div>
-                            <div class="testimonial-role">CEO, TechNova</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="testimonial-card reveal-up">
-                    <p>"Affidare a loro la nostra identità visiva è stata la scelta migliore. Sanno esattamente cosa funziona oggi!"</p>
-                    <div class="testimonial-author">
-                        <div class="testimonial-avatar"><img src="./assets/images/people/man2.jpg" alt="Andrea M." /></div>
-                        <div>
-                            <div class="testimonial-name">Andrea M.</div>
-                            <div class="testimonial-role">Founder, SportMix</div>
-                        </div>
-                    </div>
-                </div>
+                <!-- Injected via index.js -->
             </div>
         </div>
     </section>
@@ -216,33 +144,11 @@
     <!-- ========== PORTFOLIO ========== -->
     <section class="section" id="portfolio">
         <div class="container">
-            <h2 class="section-title reveal-up">I Nostri Progetti ✨</h2>
-            <p class="section-subtitle reveal-up">Ogni progetto è un viaggio creativo. Ecco alcuni dei nostri lavori recenti.</p>
+            <h2 class="section-title reveal-up" id="portfolio-title">I Nostri Progetti ✨</h2>
+            <p class="section-subtitle reveal-up" id="portfolio-subtitle">Ogni progetto è un viaggio creativo. Ecco alcuni dei nostri lavori recenti.</p>
 
             <div class="portfolio-grid" id="portfolio-grid">
-                <div class="portfolio-card reveal-up">
-                    <img src="./assets/images/home/forest.jpg" alt="Loomae Rebranding" />
-                    <div class="portfolio-overlay">
-                        <h3>Loomae Rebranding</h3>
-                        <p>Creazione nuova brand identity e campagna social di lancio.</p>
-                    </div>
-                </div>
-
-                <div class="portfolio-card reveal-up">
-                    <img src="./assets/images/home/mountain.jpg" alt="TechNova Event" />
-                    <div class="portfolio-overlay">
-                        <h3>TechNova Event</h3>
-                        <p>Organizzazione e gestione evento aziendale annuale per 500+ persone.</p>
-                    </div>
-                </div>
-
-                <div class="portfolio-card reveal-up">
-                    <img src="./assets/images/home/photography.jpg" alt="SportMix Social" />
-                    <div class="portfolio-overlay">
-                        <h3>SportMix Social</h3>
-                        <p>Gestione editoriale Instagram e TikTok con +300% conversioni.</p>
-                    </div>
-                </div>
+                <!-- Injected via index.js -->
             </div>
         </div>
     </section>
@@ -250,49 +156,11 @@
     <!-- ========== FAQ ========== -->
     <section class="section">
         <div class="container">
-            <h2 class="section-title reveal-up">Domande Frequenti</h2>
-            <p class="section-subtitle reveal-up">Hai dei dubbi? Ecco le risposte alle domande più comuni.</p>
+            <h2 class="section-title reveal-up" id="faq-title">Domande Frequenti</h2>
+            <p class="section-subtitle reveal-up" id="faq-subtitle">Hai dei dubbi? Ecco le risposte alle domande più comuni.</p>
 
-            <div class="faq-list">
-                <div class="faq-item reveal-up">
-                    <button class="faq-question">
-                        <span>Come funziona il vostro processo creativo?</span>
-                        <i class="bi bi-plus"></i>
-                    </button>
-                    <div class="faq-answer">
-                        Partiamo sempre da un briefing approfondito per capire la tua visione. Poi sviluppiamo una proposta creativa, la condividiamo con te per feedback, e infine la realizziamo nei minimi dettagli.
-                    </div>
-                </div>
-
-                <div class="faq-item reveal-up">
-                    <button class="faq-question">
-                        <span>Quanto costa un servizio?</span>
-                        <i class="bi bi-plus"></i>
-                    </button>
-                    <div class="faq-answer">
-                        Ogni progetto è diverso, per questo preferiamo fare un preventivo personalizzato dopo aver capito le tue esigenze. Contattaci per un preventivo gratuito e senza impegno!
-                    </div>
-                </div>
-
-                <div class="faq-item reveal-up">
-                    <button class="faq-question">
-                        <span>In quanto tempo consegnate un progetto?</span>
-                        <i class="bi bi-plus"></i>
-                    </button>
-                    <div class="faq-answer">
-                        Le tempistiche variano in base alla complessità del progetto. Un piano social viene generalmente consegnato in 5-7 giorni lavorativi, mentre un rebranding completo può richiedere 2-4 settimane.
-                    </div>
-                </div>
-
-                <div class="faq-item reveal-up">
-                    <button class="faq-question">
-                        <span>Lavorate anche fuori dalla Calabria?</span>
-                        <i class="bi bi-plus"></i>
-                    </button>
-                    <div class="faq-answer">
-                        Assolutamente sì! Lavoriamo con clienti in tutta Italia. Per social media e graphic design operiamo interamente da remoto, mentre per gli eventi ci spostiamo ovunque sia necessario.
-                    </div>
-                </div>
+            <div class="faq-list" id="faq-list">
+                <!-- Injected via index.js -->
             </div>
         </div>
     </section>
@@ -300,14 +168,14 @@
     <!-- ========== CONTATTI ========== -->
     <section class="section" id="contatti">
         <div class="container">
-            <h2 class="section-title reveal-up">Hai un progetto in mente?</h2>
-            <p class="section-subtitle reveal-up">Parliamone! Compila il form o scrivici direttamente su Instagram.</p>
+            <h2 class="section-title reveal-up" id="contact-title">Hai un progetto in mente?</h2>
+            <p class="section-subtitle reveal-up" id="contact-subtitle">Parliamone! Compila il form o scrivici direttamente su Instagram.</p>
 
             <div class="contact-grid reveal-up">
                 <div class="contact-form-side">
                     <h2>Scrivici</h2>
                     <p>Compila il form per richiedere informazioni o un preventivo gratuito. Ti risponderemo subito!</p>
-                    <form class="contact-form" action="mailto:info@duomedia.it" method="post" enctype="text/plain">
+                    <form class="contact-form" id="contact-form" action="mailto:info@duomedia.it" method="post" enctype="text/plain">
                         <input type="text" class="contact-input" placeholder="Il tuo Nome" required />
                         <input type="email" class="contact-input" placeholder="La tua Email" required />
                         <textarea class="contact-input" placeholder="Come possiamo aiutarti?" required></textarea>
@@ -320,10 +188,10 @@
                 <div class="contact-social-side">
                     <h2>Seguici sui social</h2>
                     <p>Guarda il dietro le quinte, i nostri ultimi lavori e scopri spunti utili per il tuo business.</p>
-                    <a href="https://instagram.com/agenzia.duomedia" target="_blank" rel="noopener noreferrer">
+                    <a href="https://instagram.com/agenzia.duomedia" target="_blank" rel="noopener noreferrer" id="contact-ig-link">
                         <i class="bi bi-instagram ig-icon"></i>
                     </a>
-                    <a href="https://instagram.com/agenzia.duomedia" target="_blank" rel="noopener noreferrer" class="ig-handle">
+                    <a href="https://instagram.com/agenzia.duomedia" target="_blank" rel="noopener noreferrer" class="ig-handle" id="contact-ig-handle">
                         @agenzia.duomedia
                     </a>
                 </div>
@@ -337,9 +205,9 @@
             <div class="footer-brand">
                 <img src="./assets/logo/DUO_Logo_Bianco.png" alt="Duo Media" class="invert-on-light" style="width:160px;" />
                 <p>
-                    Duo Media — di Francesco Martello<br />
-                    P.IVA — IT04003840792<br />
-                    Gasperina | CZ
+                    <span id="footer-company">Duo Media — di Francesco Martello</span><br />
+                    P.IVA — <span id="footer-piva">IT04003840792</span><br />
+                    <span id="footer-location">Gasperina | CZ</span>
                 </p>
             </div>
 

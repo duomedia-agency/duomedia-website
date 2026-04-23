@@ -1,5 +1,169 @@
 {
-  "portfolio": [],
-  "brands": [],
-  "testimonials": []
+  "hero": {
+    "titleLine1": "Raccontiamo la tua storia",
+    "titleLine2": "trasformando visioni in realtà",
+    "subtitle": "Gestiamo i tuoi social, organizziamo eventi e creiamo grafiche…\ne lo facciamo in due, ma con il doppio dell'energia!"
+  },
+  "services": {
+    "title": "Cosa offriamo?",
+    "subtitle": "Tre anime, un solo obiettivo: far crescere il tuo brand.",
+    "items": [
+      {
+        "id": "s1",
+        "icon": "bi-phone-fill",
+        "title": "Social Media Management",
+        "description": "Gestione completa dei canali social, creazione contenuti creativi e strategie mirate per far crescere la tua community."
+      },
+      {
+        "id": "s2",
+        "icon": "bi-calendar-event-fill",
+        "title": "Organizzazione Eventi",
+        "description": "Progettiamo e realizziamo eventi emozionanti, curando ogni singolo dettaglio per farti ricordare nel tempo."
+      },
+      {
+        "id": "s3",
+        "icon": "bi-bezier2",
+        "title": "Graphic Design",
+        "description": "Creazione di grafiche di impatto, loghi e brand identity unici per distinguerti nel mercato moderno."
+      }
+    ]
+  },
+  "whyUs": {
+    "title": "Un unico team,<br />mille soluzioni.",
+    "points": [
+      {
+        "id": "w1",
+        "icon": "bi-star-fill",
+        "title": "Approccio Sartoriale",
+        "description": "Ogni brand ha una storia unica. Noi ascoltiamo la tua e creiamo una strategia di comunicazione tagliata perfettamente su misura."
+      },
+      {
+        "id": "w2",
+        "icon": "bi-lightning-fill",
+        "title": "Dinamismo e Risultati",
+        "description": "Siamo due professionisti agili e veloci. Niente burocrazia da grande agenzia, solo creatività pura e risultati misurabili."
+      }
+    ]
+  },
+  "brands": {
+    "title": "I brand che seguiamo",
+    "items": [
+      {
+        "id": "b1",
+        "name": "Loomae",
+        "logo": "./assets/images/brand-logos/loomae-white.svg",
+        "link": "https://www.loomae.it",
+        "order": 0
+      },
+      {
+        "id": "b2",
+        "name": "Loomae",
+        "logo": "./assets/images/brand-logos/loomae-white.svg",
+        "link": "https://www.loomae.it",
+        "order": 1
+      },
+      {
+        "id": "b3",
+        "name": "Loomae",
+        "logo": "./assets/images/brand-logos/loomae-white.svg",
+        "link": "https://www.loomae.it",
+        "order": 2
+      }
+    ]
+  },
+  "portfolio": {
+    "title": "I Nostri Progetti ✨",
+    "subtitle": "Ogni progetto è un viaggio creativo. Ecco alcuni dei nostri lavori recenti.",
+    "items": [
+      {
+        "id": "p1",
+        "title": "Loomae Rebranding",
+        "description": "Creazione nuova brand identity e campagna social di lancio.",
+        "image": "./assets/images/home/forest.jpg",
+        "order": 0
+      },
+      {
+        "id": "p2",
+        "title": "TechNova Event",
+        "description": "Organizzazione e gestione evento aziendale annuale per 500+ persone.",
+        "image": "./assets/images/home/mountain.jpg",
+        "order": 1
+      },
+      {
+        "id": "p3",
+        "title": "SportMix Social",
+        "description": "Gestione editoriale Instagram e TikTok con +300% conversioni.",
+        "image": "./assets/images/home/photography.jpg",
+        "order": 2
+      }
+    ]
+  },
+  "testimonials": {
+    "title": "Dicono di noi",
+    "subtitle": "La soddisfazione dei nostri clienti è il nostro miglior biglietto da visita.",
+    "items": [
+      {
+        "id": "t1",
+        "name": "Sara L.",
+        "role": "Owner, Ristorante La Baia",
+        "text": "Duo Media ha rivoluzionato il nostro modo di comunicare. Creativi, veloci e sempre pronti a trovare la soluzione giusta per noi. Grazie ragazzi!",
+        "photo": "./assets/images/people/women.jpg",
+        "order": 0
+      },
+      {
+        "id": "t2",
+        "name": "Marco V.",
+        "role": "CEO, TechNova",
+        "text": "L'organizzazione del nostro evento aziendale è stata impeccabile. Hanno curato ogni minimo dettaglio, superando le nostre aspettative.",
+        "photo": "./assets/images/people/man.jpg",
+        "order": 1
+      },
+      {
+        "id": "t3",
+        "name": "Andrea M.",
+        "role": "Founder, SportMix",
+        "text": "Affidare a loro la nostra identità visiva è stata la scelta migliore. Sanno esattamente cosa funziona oggi!",
+        "photo": "./assets/images/people/man2.jpg",
+        "order": 2
+      }
+    ]
+  },
+  "faq": {
+    "title": "Domande Frequenti",
+    "subtitle": "Hai dei dubbi? Ecco le risposte alle domande più comuni.",
+    "items": [
+      {
+        "id": "f1",
+        "question": "Come funziona il vostro processo creativo?",
+        "answer": "Partiamo sempre da un briefing approfondito per capire la tua visione. Poi sviluppiamo una proposta creativa, la condividiamo con te per feedback, e infine la realizziamo nei minimi dettagli."
+      },
+      {
+        "id": "f2",
+        "question": "Quanto costa un servizio?",
+        "answer": "Ogni progetto è diverso, per questo preferiamo fare un preventivo personalizzato dopo aver capito le tue esigenze. Contattaci per un preventivo gratuito e senza impegno!"
+      },
+      {
+        "id": "f3",
+        "question": "In quanto tempo consegnate un progetto?",
+        "answer": "Le tempistiche variano in base alla complessità del progetto. Un piano social viene generalmente consegnato in 5-7 giorni lavorativi, mentre un rebranding completo può richiedere 2-4 settimane."
+      },
+      {
+        "id": "f4",
+        "question": "Lavorate anche fuori dalla Calabria?",
+        "answer": "Assolutamente sì! Lavoriamo con clienti in tutta Italia. Per social media e graphic design operiamo interamente da remoto, mentre per gli eventi ci spostiamo ovunque sia necessario."
+      }
+    ]
+  },
+  "contact": {
+    "title": "Hai un progetto in mente?",
+    "subtitle": "Parliamone! Compila il form o scrivici direttamente su Instagram.",
+    "email": "info@duomedia.it",
+    "igHandle": "@agenzia.duomedia",
+    "igLink": "https://instagram.com/agenzia.duomedia"
+  },
+  "footer": {
+    "companyName": "Duo Media — di Francesco Martello",
+    "piva": "IT04003840792",
+    "location": "Gasperina | CZ"
+  }
 }
