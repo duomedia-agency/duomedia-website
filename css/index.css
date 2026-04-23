@@ -214,11 +214,20 @@ body.light-theme .site-header.header-scrolled { background: rgba(245,245,247,0.8
 .brands-grid::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
 .brands-grid::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
-.brand-item { display: flex; align-items: center; justify-content: center; width: 200px; height: 90px; flex-shrink: 0; opacity: 0.5; transition: opacity var(--transition), transform var(--transition); }
+.brand-item { display: flex; align-items: center; justify-content: center; width: 200px; height: 90px; flex-shrink: 0; opacity: 0.7; transition: opacity var(--transition), transform var(--transition); }
 .brand-item:hover { opacity: 1; transform: scale(1.05); }
-.brand-item img { max-width: 100%; max-height: 100%; object-fit: contain; }
-body.light-theme .brand-item img { filter: invert(1) brightness(0.2); }
-body.light-theme .brand-item { opacity: 0.6; }
+.brand-item img { max-width: 100%; max-height: 100%; object-fit: contain; filter: grayscale(100%); transition: filter var(--transition); }
+.brand-item:hover img { filter: grayscale(0%); }
+
+/* Light Theme overrides for brands */
+body.light-theme .brand-item { opacity: 0.8; }
+/* We use a slight brightness reduction instead of invert, so colored logos don't become negative */
+body.light-theme .brand-item img { filter: grayscale(100%) contrast(1.2); }
+body.light-theme .brand-item:hover img { filter: grayscale(0%) contrast(1.2); }
+
+@media (max-width: 768px) {
+    .brand-item img { filter: grayscale(0%) !important; }
+}
 
 /* ============ SERVICES ============ */
 .services-grid {

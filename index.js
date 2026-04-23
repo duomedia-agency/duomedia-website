@@ -1,3 +1,33 @@
+// ============ THEME MANAGEMENT ============
+function toggleTheme() {
+    document.body.classList.toggle('light-theme');
+    const isLight = document.body.classList.contains('light-theme');
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+}
+
+function initTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+        document.body.classList.add('light-theme');
+    } else if (savedTheme === 'dark') {
+        document.body.classList.remove('light-theme');
+    } else {
+        // Auto detect system theme
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+            document.body.classList.add('light-theme');
+        }
+    }
+
+    // Listen for system theme changes
+    window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', e => {
+        if (!localStorage.getItem('theme')) {
+            if (e.matches) document.body.classList.add('light-theme');
+            else document.body.classList.remove('light-theme');
+        }
+    });
+}
+initTheme();
+
 // ============ HEADER SCROLL SHRINK ============
 const siteHeader = document.getElementById('site-header');
 
